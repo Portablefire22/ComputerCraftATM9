@@ -231,6 +231,7 @@ function Determine_state() -- Figure out what state the storage system was left 
       Monitor.setCursorPos(1,4)
     end
     Monitor.write("Position not found, defaulting to (1,1)")
+    Home_gantry()
     pos = true
     Save_gantry_state()
   end
@@ -247,6 +248,21 @@ function Determine_state() -- Figure out what state the storage system was left 
   if not grid or not pos then 
     os.sleep(2.5) -- Allow the user to read it?
   end
+end
+
+function Load_vault(X, Y)
+  Goto(X, Y)
+  Vault_insertion_or_extraction()
+  Goto_Centre()
+  Vault_insertion_or_extraction()
+end
+
+function Unload_vault(X, Y)
+  Goto_Centre()
+  Vault_insertion_or_extraction()
+  Goto(X, Y)
+  Vault_insertion_or_extraction()
+  Goto(1,1)
 end
 
 function Get_time_to_move(blocks)
@@ -285,11 +301,9 @@ function Start()
   Monitor.write("Initialising Storage...")
   Determine_state()
   Display_grid()
-  Home_gantry()
-  Vault_insertion_or_extraction()
-  Goto_Centre()
-  Vault_insertion_or_extraction()
-  Home_gantry()
+  Load_vault(1,1)
+  os.sleep(2)
+  Unload_vault(15, 3)
 end
 
 Start()
