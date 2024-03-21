@@ -65,7 +65,7 @@ function Increment_position()
   Redstone_integrator_2.setOutput("up", true)
   os.sleep(0.2)
   Redstone_integrator_2.setOutput("up", false)
-  os.sleep(0.4)
+  os.sleep(0.6)
 end
 
 function Home_gantry()
@@ -165,6 +165,12 @@ function Move_Y(blocks, is_backward)
   Stop(true)
 end
 
+function Vault_insertion_or_extraction()
+  Extend_piston()
+  Toggle_grabber()
+  Retract_piston()
+end
+
 function Goto_Centre()
   -- Centre is (10,5) no matter the origin
   -- 4 blocks per grid
@@ -234,13 +240,9 @@ function Start()
   Determine_state()
   Display_grid()
   Home_gantry()
-  Extend_piston()
-  Toggle_grabber()
-  Retract_piston()
+  Vault_insertion_or_extraction()
   Goto_Centre()
-  Extend_piston()
-  Toggle_grabber()
-  Retract_piston()
+  Vault_insertion_or_extraction()
   Home_gantry()
 end
 
