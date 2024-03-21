@@ -31,21 +31,30 @@ end
 function Home_gantry()
   -- I ain't got anything to figure out if it is home
   -- So I'll just send it home and wait 10s between each input
-  Set_Vert_Movement(true)
-  Set_Horz_Movement(false)
-  Set_Reverse(true)
-  Stop(false)
-  os.sleep(10)
+
+  -- Home it horizontally
   Stop(true)
-  os.sleep(0.2)
   Set_Vert_Movement(false)
   Set_Horz_Movement(true)
+  Set_Reverse(true)
+  os.sleep(0.2)
   Stop(false)
   os.sleep(10)
-  Set_Vert_Movement(false)
-  Set_Horz_Movement(false)
-  Set_Reverse(false)
+
+  -- Home it vertically
   Stop(true)
+  Set_Vert_Movement(true)
+  Set_Horz_Movement(false)
+  os.sleep(0.2)
+  Stop(false)
+  os.sleep(10)
+
+  -- Reset
+  os.sleep(0.2)
+  Stop(true)
+  Set_Horz_Movement(false)
+  Set_Vert_Movement(false)
+  Set_Reverse(false)
 end
 
 function Display_grid()
