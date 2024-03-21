@@ -260,6 +260,13 @@ function Load_vault(X, Y)
   Vault_insertion_or_extraction()
 end
 
+function Move_vault(from_X, from_Y, to_X, to_Y)
+  Goto(from_X, from_Y)
+  Vault_insertion_or_extraction()
+  Goto(to_X, to_Y)
+  Vault_insertion_or_extraction()
+end
+
 function Unload_vault(X, Y)
   Goto_Centre()
   Vault_insertion_or_extraction()
@@ -307,6 +314,7 @@ function Start()
   Load_vault(1,1)
   os.sleep(2)
   Unload_vault(15, 3)
+  Move_vault(15, 3, 1, 1)
 end
 
 Start()
