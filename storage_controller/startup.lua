@@ -13,21 +13,23 @@ function Set_grabber(state)
 end
 
 function Extend_piston()
+  Chat_box.sendMessage("Extending")
   Stop(true)
   os.sleep(0.2)
-  Set_Reverse(false)
-  Set_Vert_Movement(false)
-  Set_Horz_Movement(false)
+  Set_Reverse(true)
+  Set_Vert_Movement(true)
+  Set_Horz_Movement(true)
   Stop(false)
   os.sleep(3)
 end
 
 function Retract_piston()
   Stop(true)
+  Chat_box.sendMessage("Retracting")
   os.sleep(0.2)
   Set_Reverse(false)
-  Set_Vert_Movement(false)
-  Set_Horz_Movement(false)
+  Set_Vert_Movement(true)
+  Set_Horz_Movement(true)
   Stop(false)
   os.sleep(3)
 end
