@@ -171,11 +171,9 @@ function Vault_insertion_or_extraction()
   Retract_piston()
 end
 
-function Goto_Centre()
-  -- Centre is (10,5) no matter the origin
-  -- 4 blocks per grid
-  local delta_X = 10 - POS_X
-  local delta_Y = 5 - POS_Y
+function Goto(X, Y)
+  local delta_X = X - POS_X
+  local delta_Y = Y - POS_Y
   local is_backward_x = false
   local is_backward_y = false 
   if delta_X < 0 then
@@ -186,6 +184,12 @@ function Goto_Centre()
   end
   Move_X(delta_X, is_backward_x)
   Move_Y(delta_Y, is_backward_y)
+end
+
+function Goto_Centre()
+  -- Centre is (10,5) no matter the origin
+  -- 4 blocks per grid
+  Goto(10, 5)
 end
 
 function Setup_grid()
@@ -213,6 +217,8 @@ function Determine_state() -- Figure out what state the storage system was left 
     Setup_grid()
     Monitor.setCursorPos(1,3)
     Monitor.write("Blank grid created!")
+    file.close()
+    Save_state()
     os.sleep(2.5)
     return
   end
@@ -225,6 +231,12 @@ function Get_time_to_move(blocks)
   local speed_to_rpm = 512
   Chat_box.sendMessage(string.format("Time: %f", math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)))
   return (math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)) + 0.2
+end
+
+function Save_state()
+  local file = fs.open("storage_state.dat", "w")
+  file.write(textutils.serialize(Grid))
+  file.close()
 end
 
 function Start()
