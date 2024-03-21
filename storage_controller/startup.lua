@@ -13,11 +13,11 @@ function Set_grabber(state)
 end
 
 function Set_Horz_Movement(state)
-  Redstone_integrator.setOutput("south", not state) -- Stops if true
+  Redstone_integrator.setOutput("south", state) -- Stops if true
 end
 
 function Set_Vert_Movement(state)
-  Redstone_integrator.setOutput("down", not state)
+  Redstone_integrator.setOutput("north", state)
 end
 
 function Set_Reverse(state)
