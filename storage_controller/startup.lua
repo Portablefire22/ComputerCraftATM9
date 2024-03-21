@@ -2,8 +2,9 @@ Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
 Buffer_barrel = peripheral.find("minecraft:barrel") -- To move items to and from the vault
-Redstone_integrator = peripheral.find("redstoneIntegrator")
+Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 Monitor = peripheral.find("monitor")
+Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 Grid = {}
 POS_X = 0
 POS_Y = 0
@@ -54,6 +55,12 @@ function Stop(state)
   Redstone_integrator.setOutput("up", state)
 end
 
+function Increment_position()
+  Redstone_integrator_2.setOutput("up", true)
+  os.sleep(0.2)
+  Redstone_integrator_2.setOutput("up", false)
+  os.sleep(0.4)
+end
 
 function Home_gantry()
   -- I ain't got anything to figure out if it is home
@@ -67,7 +74,9 @@ function Home_gantry()
   os.sleep(0.2)
   Stop(false)
   Chat_box.sendMessage("Homing Horizontally")
-  os.sleep(10)
+  for i=1,21 do 
+    Increment_position()
+  end
 
   -- Home it vertically
   Stop(true)
@@ -76,7 +85,9 @@ function Home_gantry()
   os.sleep(0.2)
   Stop(false)
   Chat_box.sendMessage("Homing Vertically")
-  os.sleep(10)
+  for i=1,11 do 
+    Increment_position()
+  end
 
   -- Reset
   os.sleep(0.2)
@@ -115,8 +126,9 @@ function Move_X(blocks, is_backward)
   Set_Horz_Movement(true)
   Set_Reverse(is_backward)
   os.sleep(0.2)
-  Stop(false)
-  os.sleep(Get_time_to_move(blocks))
+  for i=1,blocks+1 do 
+    Increment_position()
+  end
   Stop(true)
 end
 
@@ -126,8 +138,9 @@ function Move_Y(blocks, is_backward)
   Set_Horz_Movement(false)
   Set_Reverse(is_backward)
   os.sleep(0.2)
-  Stop(false)
-  os.sleep(Get_time_to_move(blocks))
+  for i=1,blocks+1 do 
+    Increment_position()
+  end
   Stop(true)
 end
 
@@ -144,8 +157,8 @@ function Goto_Centre()
   if delta_Y < 0 then
     is_backward_y = true
   end
-  Move_X(delta_X * 4, is_backward_x)
-  Move_Y(delta_Y * 4, is_backward_y)
+  Move_X(delta_X, is_backward_x)
+  Move_Y(delta_Y, is_backward_y)
 end
 
 function Setup_grid()
@@ -177,7 +190,6 @@ function Determine_state() -- Figure out what state the storage system was left 
     return
   end
 end
-  Chat_box.sendMessage("Extending")
 
 function Get_time_to_move(blocks)
   -- https://github.com/EvGamer/minecraft_cc_scripts/blob/master/create_gantry_test/move.lua
