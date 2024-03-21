@@ -110,29 +110,32 @@ function Home_gantry()
 end
 
 function Display_grid()
-  Monitor.clear()
-  Monitor.setCursorPos(1,1)
-  Monitor.setTextColour(colours.blue)
-  for y in pairs(Grid) do
-    Monitor.setCursorPos(1,y)
-    for x in pairs(Grid[y]) do
-      if y == 6 and x == 11 then 
-        Monitor.setTextColour(colours.orange)
-      end
-      Monitor.write("[")
-      if next(Grid[y][x]) ~= nil then
-        Monitor.setTextColour(colours.white)
-        Monitor.write("X")
+  while (true) do
+    Monitor.clear()
+    Monitor.setCursorPos(1,1)
+    Monitor.setTextColour(colours.blue)
+    for y in pairs(Grid) do
+      Monitor.setCursorPos(1,y)
+      for x in pairs(Grid[y]) do
+        if y == 6 and x == 11 then 
+          Monitor.setTextColour(colours.orange)
+        end
+        Monitor.write("[")
+        if next(Grid[y][x]) ~= nil then
+          Monitor.setTextColour(colours.white)
+          Monitor.write("X")
+          Monitor.setTextColour(colours.blue)
+        else
+          Monitor.write(" ") -- Keep it all in line
+        end
+        if y == 6 and x == 11 then 
+          Monitor.setTextColour(colours.orange)
+        end
+        Monitor.write("]")
         Monitor.setTextColour(colours.blue)
-      else
-        Monitor.write(" ") -- Keep it all in line
       end
-      if y == 6 and x == 11 then 
-        Monitor.setTextColour(colours.orange)
-      end
-      Monitor.write("]")
-      Monitor.setTextColour(colours.blue)
     end
+    os.sleep(0.2)
   end
 end
 
@@ -184,7 +187,7 @@ function Vault_insertion_or_extraction()
     Vault["X"] = POS_X
     Vault["Y"] = POS_Y
   else
-    Grid[POS_X][POS_Y] = 0
+    Grid[POS_Y][POS_X] = 0
   end
   Retract_piston()
 end
@@ -341,7 +344,7 @@ function Start()
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
   Determine_state()
-  Parallel.waitForAny(Display_grid(), Runtime())
+  parallel.waitForAny(Display_grid(), Runtime())
   --Load_vault(1,1)
   --os.sleep(2)
   --Unload_vault(15, 3)
