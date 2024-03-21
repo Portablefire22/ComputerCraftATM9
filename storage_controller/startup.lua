@@ -2,10 +2,44 @@ Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
 Buffer_barrel = peripheral.find("minecraft:barrel") -- To move items to and from the vault
+Redstone_integrator = peripheral.find("redstoneIntegrator")
 Monitor = peripheral.find("monitor")
 Grid = {}
 WIDTH = 21
 HEIGHT = 11
+
+function Set_grabber(state)
+  Redstone_integrator.setOutput("east", state)
+end
+
+function Set_Horz_Movement(state)
+  Redstone_integrator.setOutput("south", !state) -- Stops if true
+end
+
+function Set_Vert_Movement(state)
+  Redstone_integrator.setOutput("down", !state)
+end
+
+function Set_Movement(state)
+  Redstone_integrator.setOutput("west", state)
+end
+
+function Set_clutch(state)
+  Redstone_integrator.setOutput("up", state)
+end
+
+function Home_gantry()
+  -- I ain't got anything to figure out if it is home
+  -- So I'll just send it home and wait 10s between each input
+  Set_Vert_Movement(true)
+  Set_Horz_Movement(false)
+  Set_Movement(true)
+  os.sleep(10)
+  Set_Movement(false)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(true)
+  Set_Movement(true)
+end
 
 function Display_grid()
   Monitor.clear()
@@ -19,6 +53,8 @@ function Display_grid()
         Monitor.setTextColour(colours.white)
         Monitor.write("X")
         Monitor.setTextColour(colours.blue)
+      else
+        Monitor.write(" ") -- Keep it all in line
       end
       Monitor.write("]")
     end
@@ -29,11 +65,11 @@ function Setup_grid()
   for y=1,HEIGHT do
     Grid[y] = {}
     for x=1,WIDTH do
-      if x % 2 == 0 then 
+      if x % 2 == 0 then
         Grid[y][x] = {}
-      else 
+      else
         Grid[y][x] = {0}
-      end 
+      end
     end
   end
 end
@@ -61,6 +97,7 @@ function Start()
   Monitor.write("Initialising Storage...")
   Determine_state()
   Display_grid()
+  Home_gantry()
 end
 
 Start()
