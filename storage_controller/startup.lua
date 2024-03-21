@@ -39,6 +39,7 @@ function Home_gantry()
   Set_Reverse(true)
   os.sleep(0.2)
   Stop(false)
+  Chat_box.sendMessage("Homing Horizontally")
   os.sleep(10)
 
   -- Home it vertically
@@ -47,6 +48,7 @@ function Home_gantry()
   Set_Horz_Movement(false)
   os.sleep(0.2)
   Stop(false)
+  Chat_box.sendMessage("Homing Vertically")
   os.sleep(10)
 
   -- Reset
@@ -55,6 +57,7 @@ function Home_gantry()
   Set_Horz_Movement(false)
   Set_Vert_Movement(false)
   Set_Reverse(false)
+  Chat_box.sendMessage("Finished Homing")
 end
 
 function Display_grid()
