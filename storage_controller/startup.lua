@@ -6,8 +6,8 @@ Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 Monitor = peripheral.find("monitor")
 Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 Grid = {}
-POS_X = 0
-POS_Y = 0
+POS_X = 1
+POS_Y = 1
 WIDTH = 21
 HEIGHT = 11
 
@@ -135,6 +135,12 @@ function Move_X(blocks, is_backward)
   Stop(false)
   for i=1,blocks+1 do 
     Increment_position()
+    if is_backward then 
+      POS_X = POS_X - 1
+    else
+      POS_X = POS_X + 1
+    end
+    Chat_box.sendMessage(string.format("X: %d", POS_X))
   end
   Stop(true)
 end
@@ -148,6 +154,13 @@ function Move_Y(blocks, is_backward)
   Stop(false)
   for i=1,blocks+1 do 
     Increment_position()
+    if is_backward then
+      POS_Y = POS_Y - 1
+    else
+      POS_Y = POS_Y + 1
+    end
+    Chat_box.sendMessage(string.format("Y: %d", POS_Y))
+
   end
   Stop(true)
 end
