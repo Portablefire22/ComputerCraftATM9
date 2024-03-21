@@ -207,6 +207,8 @@ end
 
 function Determine_state() -- Figure out what state the storage system was left in
   local file = fs.open("storage_state.dat", "r")
+  local grid = false
+  local pos = false
   if file == nil then
     Monitor.clear()
     Monitor.setTextColour(colours.red)
@@ -217,10 +219,29 @@ function Determine_state() -- Figure out what state the storage system was left 
     Setup_grid()
     Monitor.setCursorPos(1,3)
     Monitor.write("Blank grid created!")
-    file.close()
-    Save_state()
+    Save_grid_state()
+    grid = true
     os.sleep(2.5)
-    return
+  end
+  local position_file = fs.open("gantry_state.dat", "r")
+  if position_file == nil then
+    if not grid then 
+      Monitor.clear()
+      Monitor.setCursorPos(1,1)
+    else 
+      Monitor.setCursorPos(1,4)
+    end
+    Monitor.Write("Position not found, defaulting to (1,1)")
+    Save_gantry_state()
+  end
+
+  if not grid then
+    Grid = textutils.unserialize(file.readAll())
+  end
+  if not pos then
+    local position = textutils.unserialize(file.readAll())
+    POS_X = position["X"]
+    POS_Y = position["Y"]
   end
 end
 
@@ -233,7 +254,16 @@ function Get_time_to_move(blocks)
   return (math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)) + 0.2
 end
 
-function Save_state()
+function Save_gantry_state()
+  local file = fs.open("gantry_state.dat", "w")
+  local pos = {}
+  pos["X"] = POS_X
+  pos["Y"] = POS_Y
+  file.write(textutils.serialize(pos))
+  file.close()
+end
+
+function Save_grid_state()
   local file = fs.open("storage_state.dat", "w")
   file.write(textutils.serialize(Grid))
   file.close()
