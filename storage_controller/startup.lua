@@ -182,6 +182,7 @@ function Get_time_to_move(blocks)
   local rpm = 256
   local tick_in_second = 20
   local speed_to_rpm = 512
+  Chat_box.sendMessage(string.format("Time: %f", math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)))
   return math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)
 end
 
