@@ -114,6 +114,9 @@ function Display_grid()
   for y in pairs(Grid) do
     Monitor.setCursorPos(1,y)
     for x in pairs(Grid[y]) do
+      if y == 6 and x == 11 then 
+        Monitor.setTextColour(colours.orange)
+      end
       Monitor.write("[")
       if next(Grid[y][x]) ~= nil then
         Monitor.setTextColour(colours.white)
@@ -122,7 +125,11 @@ function Display_grid()
       else
         Monitor.write(" ") -- Keep it all in line
       end
+      if y == 6 and x == 11 then 
+        Monitor.setTextColour(colours.orange)
+      end
       Monitor.write("]")
+      Monitor.setTextColour(colours.blue)
     end
   end
 end
@@ -306,6 +313,7 @@ function Start()
   Redstone_integrator.setOutput("south", false)
   Redstone_integrator.setOutput("east", false)
   Redstone_integrator.setOutput("west", false)
+  Monitor.clear()
   Monitor.setCursorPos(1,1)
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
