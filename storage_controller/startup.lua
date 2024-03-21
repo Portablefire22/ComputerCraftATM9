@@ -20,7 +20,7 @@ function Set_Vert_Movement(state)
   Redstone_integrator.setOutput("down", not state)
 end
 
-function Set_Movement(state)
+function Set_Reverse(state)
   Redstone_integrator.setOutput("west", state)
 end
 
@@ -33,15 +33,17 @@ function Home_gantry()
   -- So I'll just send it home and wait 10s between each input
   Set_Vert_Movement(true)
   Set_Horz_Movement(false)
-  Set_Movement(true)
+  Set_Reverse(true)
+  Set_clutch(false)
   os.sleep(10)
-  Set_Movement(false)
+  Set_clutch(false)
   Set_Vert_Movement(false)
   Set_Horz_Movement(true)
-  Set_Movement(true)
+  Set_clutch(true)
   Set_Vert_Movement(false)
   Set_Horz_Movement(false)
-  Set_Movement(false)
+  Set_Reverse(false)
+  Set_clutch(false)
 end
 
 function Display_grid()
