@@ -327,12 +327,9 @@ end
 
 function Runtime()
   Load_vault(1,1)
-  Display_grid()
   os.sleep(2)
   Unload_vault(15, 3)
-  Display_grid()
   Move_vault(15, 3, 1, 1)
-  Display_grid()
 end
 
 function Start()
@@ -347,7 +344,7 @@ function Start()
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
   Determine_state()
-  Runtime()
+  parallel.waitForAny(Display_grid(), Runtime())
   --Load_vault(1,1)
   --os.sleep(2)
   --Unload_vault(15, 3)
