@@ -1,10 +1,12 @@
 Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
-Buffer_barrel = peripheral.find("minecraft:barrel") -- To move items to and from the vault
+Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
+Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
 Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 Monitor = peripheral.find("monitor")
 Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
+Grabbed_vault = nil
 Vault = nil
 Grid = {}
 POS_X = 1
@@ -177,6 +179,13 @@ end
 function Vault_insertion_or_extraction()
   Extend_piston()
   Toggle_grabber()
+  if Vault == nil then 
+    Vault = {}
+    Vault["X"] = POS_X
+    Vault["Y"] = POS_Y
+  else
+    Grid[POS_X][POS_Y] = 0
+  end
   Retract_piston()
 end
 
@@ -206,11 +215,7 @@ function Setup_grid()
   for y=1,HEIGHT do
     Grid[y] = {}
     for x=1,WIDTH do
-      if x % 2 == 0 then
-        Grid[y][x] = {}
-      else
         Grid[y][x] = {0}
-      end
     end
   end
 end
@@ -306,19 +311,16 @@ function Save_grid_state()
   file.close()
 end
 
+function Attach_vault()
+  Vault = peripheral.find("create:item_vault")
+end
+
+function Detach_vault()
+  Vault = nil
+end
+
 function Cmd()
-  local w, h = term.getSize()
-  term.clear()
-  term.setCursorPos(1, h)
-  print("The Grid")
-  term.setCursorPos(10, h)
-  term.setTextColour(colour.yellow)
-  print(">")
-  term.setTextColour(colour.white)
   local input = read()
-  term.scroll(1)
-  term.setCursorPos(1, h)
-  print(input)
 end
 
 function Start()
