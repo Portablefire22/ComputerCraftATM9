@@ -24,7 +24,7 @@ function Set_Reverse(state)
   Redstone_integrator.setOutput("west", state)
 end
 
-function Set_clutch(state)
+function Stop(state)
   Redstone_integrator.setOutput("up", state)
 end
 
@@ -34,16 +34,17 @@ function Home_gantry()
   Set_Vert_Movement(true)
   Set_Horz_Movement(false)
   Set_Reverse(true)
-  Set_clutch(false)
+  Stop(false)
   os.sleep(10)
-  Set_clutch(false)
+  Stop(true)
   Set_Vert_Movement(false)
   Set_Horz_Movement(true)
-  Set_clutch(true)
+  Stop(false)
+  os.sleep(10)
   Set_Vert_Movement(false)
   Set_Horz_Movement(false)
   Set_Reverse(false)
-  Set_clutch(false)
+  Stop(true)
 end
 
 function Display_grid()
