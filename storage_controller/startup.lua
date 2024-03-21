@@ -5,6 +5,7 @@ Buffer_barrel = peripheral.find("minecraft:barrel") -- To move items to and from
 Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 Monitor = peripheral.find("monitor")
 Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
+Vault = nil
 Grid = {}
 POS_X = 1
 POS_Y = 1
@@ -140,7 +141,7 @@ function Move_X(blocks, is_backward)
     else
       POS_X = POS_X + 1
     end
-    Chat_box.sendMessage(string.format("X: %d", POS_X))
+    Save_gantry_state()
   end
   Stop(true)
 end
@@ -159,8 +160,7 @@ function Move_Y(blocks, is_backward)
     else
       POS_Y = POS_Y + 1
     end
-    Chat_box.sendMessage(string.format("Y: %d", POS_Y))
-
+    Save_gantry_state()
   end
   Stop(true)
 end
@@ -221,17 +221,17 @@ function Determine_state() -- Figure out what state the storage system was left 
     Monitor.write("Blank grid created!")
     Save_grid_state()
     grid = true
-    os.sleep(2.5)
   end
   local position_file = fs.open("gantry_state.dat", "r")
   if position_file == nil then
-    if not grid then 
+    if grid then 
       Monitor.clear()
       Monitor.setCursorPos(1,1)
     else 
       Monitor.setCursorPos(1,4)
     end
-    Monitor.Write("Position not found, defaulting to (1,1)")
+    Monitor.write("Position not found, defaulting to (1,1)")
+    pos = true
     Save_gantry_state()
   end
 
@@ -240,8 +240,12 @@ function Determine_state() -- Figure out what state the storage system was left 
   end
   if not pos then
     local position = textutils.unserialize(file.readAll())
+    print(position)
     POS_X = position["X"]
     POS_Y = position["Y"]
+  end
+  if not grid or not pos then 
+    os.sleep(2.5) -- Allow the user to read it?
   end
 end
 
