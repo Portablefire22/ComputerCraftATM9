@@ -12,6 +12,26 @@ function Set_grabber(state)
   Redstone_integrator.setOutput("east", state)
 end
 
+function Extend_piston()
+  Stop(true)
+  os.sleep(0.2)
+  Set_Reverse(false)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(false)
+  Stop(false)
+  os.sleep(3)
+end
+
+function Retract_piston()
+  Stop(true)
+  os.sleep(0.2)
+  Set_Reverse(false)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(false)
+  Stop(false)
+  os.sleep(3)
+end
+
 function Set_Horz_Movement(state)
   Redstone_integrator.setOutput("south", state) -- Stops if true
 end
@@ -27,6 +47,7 @@ end
 function Stop(state)
   Redstone_integrator.setOutput("up", state)
 end
+
 
 function Home_gantry()
   -- I ain't got anything to figure out if it is home
@@ -123,6 +144,8 @@ function Start()
   Determine_state()
   Display_grid()
   Home_gantry()
+  Extend_piston()
+  Retract_piston()
 end
 
 Start()
