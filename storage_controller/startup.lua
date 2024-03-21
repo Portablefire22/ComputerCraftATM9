@@ -25,7 +25,9 @@ function Extend_piston()
   Set_Vert_Movement(true)
   Set_Horz_Movement(true)
   Stop(false)
-  os.sleep(3)
+  for i=1,3 do 
+    Increment_position()
+  end
 end
 
 function Retract_piston()
@@ -36,7 +38,9 @@ function Retract_piston()
   Set_Vert_Movement(true)
   Set_Horz_Movement(true)
   Stop(false)
-  os.sleep(3)
+  for i=1,3 do 
+    Increment_position()
+  end
 end
 
 function Set_Horz_Movement(state)
@@ -126,6 +130,7 @@ function Move_X(blocks, is_backward)
   Set_Horz_Movement(true)
   Set_Reverse(is_backward)
   os.sleep(0.2)
+  Stop(false)
   for i=1,blocks+1 do 
     Increment_position()
   end
@@ -138,6 +143,7 @@ function Move_Y(blocks, is_backward)
   Set_Horz_Movement(false)
   Set_Reverse(is_backward)
   os.sleep(0.2)
+  Stop(false)
   for i=1,blocks+1 do 
     Increment_position()
   end
