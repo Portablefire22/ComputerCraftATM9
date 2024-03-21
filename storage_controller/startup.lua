@@ -20,9 +20,9 @@ function Display_grid()
 end
 
 function Setup_grid()
-  for y in HEIGHT do
+  for y=1,HEIGHT do
     Grid[y] = {}
-    for x in WIDTH do
+    for x=1,WIDTH do
       Grid[y][x] = {}
     end
   end
