@@ -19,7 +19,7 @@ function Toggle_grabber()
 end
 
 function Extend_piston()
-  Chat_box.sendMessage("Extending")
+  --Chat_box.sendMessage("Extending")
   Stop(true)
   os.sleep(0.2)
   Set_Reverse(true)
@@ -34,7 +34,7 @@ end
 
 function Retract_piston()
   Stop(true)
-  Chat_box.sendMessage("Retracting")
+  --Chat_box.sendMessage("Retracting")
   os.sleep(0.2)
   Set_Reverse(false)
   Set_Vert_Movement(true)
@@ -80,7 +80,7 @@ function Home_gantry()
   Set_Reverse(true)
   os.sleep(0.2)
   Stop(false)
-  Chat_box.sendMessage("Homing Horizontally")
+  --Chat_box.sendMessage("Homing Horizontally")
   for i=1,21 do 
     Increment_position()
   end
@@ -91,7 +91,7 @@ function Home_gantry()
   Set_Horz_Movement(false)
   os.sleep(0.2)
   Stop(false)
-  Chat_box.sendMessage("Homing Vertically")
+  --Chat_box.sendMessage("Homing Vertically")
   for i=1,11 do 
     Increment_position()
   end
@@ -102,7 +102,7 @@ function Home_gantry()
   Set_Horz_Movement(false)
   Set_Vert_Movement(false)
   Set_Reverse(false)
-  Chat_box.sendMessage("Finished Homing")
+  --Chat_box.sendMessage("Finished Homing")
   POS_X = 1
   POS_Y = 1
 end
@@ -181,7 +181,7 @@ function Vault_insertion_or_extraction()
 end
 
 function Goto(X, Y)
-  Chat_box.sendMessage(string.format("Moving to (%d,%d)", X, Y))
+  --Chat_box.sendMessage(string.format("Moving to (%d,%d)", X, Y))
   local delta_X = X - POS_X
   local delta_Y = Y - POS_Y
   local is_backward_x = false
@@ -287,7 +287,7 @@ function Get_time_to_move(blocks)
   local rpm = 256
   local tick_in_second = 20
   local speed_to_rpm = 512
-  Chat_box.sendMessage(string.format("Time: %f", math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)))
+  --Chat_box.sendMessage(string.format("Time: %f", math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)))
   return (math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)) + 0.2
 end
 
@@ -306,6 +306,21 @@ function Save_grid_state()
   file.close()
 end
 
+function Cmd()
+  local w, h = term.getSize()
+  term.clear()
+  term.setCursorPos(1, h)
+  print("The Grid")
+  term.setCursorPos(10, h)
+  term.setTextColour(colour.yellow)
+  print(">")
+  term.setTextColour(colour.white)
+  local input = read()
+  term.scroll(1)
+  term.setCursorPos(1, h)
+  print(input)
+end
+
 function Start()
   Redstone_integrator.setOutput("up", false)
   Redstone_integrator.setOutput("down", false)
@@ -319,10 +334,11 @@ function Start()
   Monitor.write("Initialising Storage...")
   Determine_state()
   Display_grid()
-  Load_vault(1,1)
-  os.sleep(2)
-  Unload_vault(15, 3)
-  Move_vault(15, 3, 1, 1)
+  --Load_vault(1,1)
+  --os.sleep(2)
+  --Unload_vault(15, 3)
+  --Move_vault(15, 3, 1, 1)
+  Cmd()
 end
 
 Start()
