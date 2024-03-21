@@ -5,6 +5,8 @@ Buffer_barrel = peripheral.find("minecraft:barrel") -- To move items to and from
 Redstone_integrator = peripheral.find("redstoneIntegrator")
 Monitor = peripheral.find("monitor")
 Grid = {}
+POS_X = 0
+POS_Y = 0
 WIDTH = 21
 HEIGHT = 11
 
@@ -81,6 +83,8 @@ function Home_gantry()
   Set_Vert_Movement(false)
   Set_Reverse(false)
   Chat_box.sendMessage("Finished Homing")
+  POS_X = 0
+  POS_Y = 0
 end
 
 function Display_grid()
@@ -101,6 +105,45 @@ function Display_grid()
       Monitor.write("]")
     end
   end
+end
+
+function Move_X(blocks, is_backward)
+  Stop(true)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(true)
+  Set_Reverse(is_backward)
+  os.sleep(0.2)
+  Stop(false)
+  os.sleep(Get_time_to_move(blocks))
+  Stop(true)
+end
+
+function Move_Y(blocks, is_backward)
+  Stop(true)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(true)
+  Set_Reverse(is_backward)
+  os.sleep(0.2)
+  Stop(false)
+  os.sleep(Get_time_to_move(blocks))
+  Stop(true)
+end
+
+function Goto_Centre()
+  -- Centre is (10,5) no matter the origin
+  -- 4 blocks per grid
+  local delta_X = 10 - POS_X
+  local delta_Y = 5 - POS_Y
+  local is_backward_x = false
+  local is_backward_y = false 
+  if delta_X < 0 then
+    is_backward_x = true
+  end
+  if delta_Y < 0 then
+    is_backward_y = true
+  end
+  Move_X(delta_X * 4, is_backward_x)
+  Move_Y(delta_Y * 4, is_backward_y)
 end
 
 function Setup_grid()
@@ -132,6 +175,15 @@ function Determine_state() -- Figure out what state the storage system was left 
     return
   end
 end
+  Chat_box.sendMessage("Extending")
+
+function Get_time_to_move(blocks)
+  -- https://github.com/EvGamer/minecraft_cc_scripts/blob/master/create_gantry_test/move.lua
+  local rpm = 256
+  local tick_in_second = 20
+  local speed_to_rpm = 512
+  return math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)
+end
 
 function Start()
   Redstone_integrator.setOutput("up", false)
@@ -147,7 +199,13 @@ function Start()
   Display_grid()
   Home_gantry()
   Extend_piston()
+  Set_grabber(true)
   Retract_piston()
+  Goto_Centre()
+  Extend_piston()
+  Set_grabber(false)
+  Retract_piston()
+  Home_gantry()
 end
 
 Start()
