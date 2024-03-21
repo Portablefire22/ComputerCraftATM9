@@ -120,8 +120,8 @@ end
 
 function Move_Y(blocks, is_backward)
   Stop(true)
-  Set_Vert_Movement(false)
-  Set_Horz_Movement(true)
+  Set_Vert_Movement(true)
+  Set_Horz_Movement(false)
   Set_Reverse(is_backward)
   os.sleep(0.2)
   Stop(false)
