@@ -134,7 +134,7 @@ function Move_X(blocks, is_backward)
   Set_Reverse(is_backward)
   os.sleep(0.2)
   Stop(false)
-  for i=1,blocks+1 do 
+  for i=1,blocks do 
     Increment_position()
     if is_backward then 
       POS_X = POS_X - 1
@@ -144,6 +144,7 @@ function Move_X(blocks, is_backward)
     Save_gantry_state()
   end
   Stop(true)
+  Set_Reverse(false)
 end
 
 function Move_Y(blocks, is_backward)
@@ -153,7 +154,7 @@ function Move_Y(blocks, is_backward)
   Set_Reverse(is_backward)
   os.sleep(0.2)
   Stop(false)
-  for i=1,blocks+1 do 
+  for i=1,blocks do 
     Increment_position()
     if is_backward then
       POS_Y = POS_Y - 1
@@ -163,6 +164,7 @@ function Move_Y(blocks, is_backward)
     Save_gantry_state()
   end
   Stop(true)
+  Set_Reverse(false)
 end
 
 function Vault_insertion_or_extraction()
@@ -188,9 +190,9 @@ function Goto(X, Y)
 end
 
 function Goto_Centre()
-  -- Centre is (10,5) no matter the origin
+  -- Centre is (11,6) no matter the origin
   -- 4 blocks per grid
-  Goto(10, 5)
+  Goto(11, 6)
 end
 
 function Setup_grid()
