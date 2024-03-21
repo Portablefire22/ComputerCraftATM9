@@ -27,6 +27,7 @@ function Extend_piston()
   Stop(false)
   for i=1,3 do 
     Increment_position()
+    os.sleep(0.2)
   end
 end
 
@@ -40,6 +41,7 @@ function Retract_piston()
   Stop(false)
   for i=1,3 do 
     Increment_position()
+    os.sleep(0.2)
   end
 end
 
@@ -100,8 +102,8 @@ function Home_gantry()
   Set_Vert_Movement(false)
   Set_Reverse(false)
   Chat_box.sendMessage("Finished Homing")
-  POS_X = 0
-  POS_Y = 0
+  POS_X = 1
+  POS_Y = 1
 end
 
 function Display_grid()
