@@ -172,6 +172,7 @@ function Vault_insertion_or_extraction()
 end
 
 function Goto(X, Y)
+  Chat_box.sendMessage(string.format("Moving to (%d,%d)", X, Y))
   local delta_X = X - POS_X
   local delta_Y = Y - POS_Y
   local is_backward_x = false
@@ -240,7 +241,7 @@ function Determine_state() -- Figure out what state the storage system was left 
     Grid = textutils.unserialize(file.readAll())
   end
   if not pos then
-    local position = textutils.unserialize(file.readAll())
+    local position = textutils.unserialize(position_file.readAll())
     print(position)
     POS_X = position["X"]
     POS_Y = position["Y"]
