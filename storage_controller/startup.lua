@@ -39,6 +39,9 @@ function Home_gantry()
   Set_Vert_Movement(false)
   Set_Horz_Movement(true)
   Set_Movement(true)
+  Set_Vert_Movement(false)
+  Set_Horz_Movement(false)
+  Set_Movement(false)
 end
 
 function Display_grid()
