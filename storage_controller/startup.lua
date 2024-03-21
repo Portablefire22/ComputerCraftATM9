@@ -6,16 +6,19 @@ Monitor = peripheral.find("monitor")
 
 function Determine_state() -- Figure out what state the storage system was left in
   local file = fs.open("storage_state", "r")
-  if file == nil then 
+  if file == nil then
     Monitor.clear()
     Monitor.setTextColour(colours.red)
     Monitor.setCursorPos(0,0)
     Monitor.write("Previous storage state was not saved!\nAssuming system is in perfect condition!")
     return
-  end 
+  end
 end
 
 function Start()
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
+  Determine_state()
 end
+
+Start()
