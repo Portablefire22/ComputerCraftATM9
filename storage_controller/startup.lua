@@ -185,8 +185,8 @@ function Goto(X, Y)
   if delta_Y < 0 then
     is_backward_y = true
   end
-  Move_X(delta_X, is_backward_x)
-  Move_Y(delta_Y, is_backward_y)
+  Move_X(math.abs(delta_X), is_backward_x)
+  Move_Y(math.abs(delta_Y), is_backward_y)
 end
 
 function Goto_Centre()
