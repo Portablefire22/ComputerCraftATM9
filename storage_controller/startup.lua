@@ -215,7 +215,7 @@ function Setup_grid()
   for y=1,HEIGHT do
     Grid[y] = {}
     for x=1,WIDTH do
-        Grid[y][x] = {0}
+        Grid[y][x] = {}
     end
   end
 end
@@ -284,7 +284,6 @@ function Unload_vault(X, Y)
   Vault_insertion_or_extraction()
   Goto(X, Y)
   Vault_insertion_or_extraction()
-  Goto(1,1)
 end
 
 function Get_time_to_move(blocks)
@@ -323,6 +322,13 @@ function Cmd()
   local input = read()
 end
 
+function Runtime()
+  Load_vault(1,1)
+  os.sleep(2)
+  Unload_vault(15, 3)
+  Move_vault(15, 3, 1, 1)
+end
+
 function Start()
   Redstone_integrator.setOutput("up", false)
   Redstone_integrator.setOutput("down", false)
@@ -335,12 +341,11 @@ function Start()
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
   Determine_state()
-  Display_grid()
+  Parallel.waitForAny(Display_grid(), Runtime())
   --Load_vault(1,1)
   --os.sleep(2)
   --Unload_vault(15, 3)
   --Move_vault(15, 3, 1, 1)
-  Cmd()
 end
 
 Start()
