@@ -183,8 +183,10 @@ function Vault_insertion_or_extraction()
     Vault = {}
     Vault["X"] = POS_X
     Vault["Y"] = POS_Y
+    Grid[POS_Y][POS_X] = {}
   else
-    Grid[POS_Y][POS_X] = 0
+    Grid[POS_Y][POS_X] = {0}
+    Vault = nil
   end
   Retract_piston()
 end
