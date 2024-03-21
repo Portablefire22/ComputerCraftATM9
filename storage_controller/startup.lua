@@ -14,7 +14,13 @@ function Display_grid()
   for y in pairs(Grid) do
     Monitor.setCursorPos(1,y)
     for x in pairs(Grid[y]) do
-      Monitor.Write("[ ]")
+      Monitor.write("[")
+      if next(Grid[y][x]) ~= nil then
+        Monitor.setTextColour(colours.white)
+        Monitor.write("X")
+        Monitor.setTextColour(colours.blue)
+      end
+      Monitor.write("]")
     end
   end
 end
@@ -23,7 +29,11 @@ function Setup_grid()
   for y=1,HEIGHT do
     Grid[y] = {}
     for x=1,WIDTH do
-      Grid[y][x] = {}
+      if x % 2 == 0 then 
+        Grid[y][x] = {}
+      else 
+        Grid[y][x] = {0}
+      end 
     end
   end
 end
@@ -39,7 +49,7 @@ function Determine_state() -- Figure out what state the storage system was left 
     Monitor.write("Assuming system is completely empty!")
     Setup_grid()
     Monitor.setCursorPos(1,3)
-    Monitor.Write("Blank grid created!")
+    Monitor.write("Blank grid created!")
     os.sleep(2.5)
     return
   end
