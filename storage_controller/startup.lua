@@ -10,8 +10,10 @@ POS_Y = 0
 WIDTH = 21
 HEIGHT = 11
 
-function Set_grabber(state)
-  Redstone_integrator.setOutput("east", state)
+function Toggle_grabber()
+  Redstone_integrator.setOutput("east", true)
+  os.sleep(0.2)
+  Redstone_integrator.setOutput("east", false)
 end
 
 function Extend_piston()
@@ -200,11 +202,11 @@ function Start()
   Display_grid()
   Home_gantry()
   Extend_piston()
-  Set_grabber(true)
+  Toggle_grabber()
   Retract_piston()
   Goto_Centre()
   Extend_piston()
-  Set_grabber(false)
+  Toggle_grabber()
   Retract_piston()
   Home_gantry()
 end
