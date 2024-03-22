@@ -7,13 +7,13 @@ local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
 local Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
 
-Grabbed_vault = nil
-Grid = {}
-Vault = nil
-POS_X = 1
-POS_Y = 1
-WIDTH = 21
-HEIGHT = 11
+local Grabbed_vault = nil
+local Grid = {}
+local Vault = nil
+local POS_X = 1
+local POS_Y = 1
+local WIDTH = 21
+local HEIGHT = 11
 
 
 function grid_module.Toggle_grabber()
@@ -178,14 +178,14 @@ function grid_module.Goto(X, Y)
   if delta_Y < 0 then
     is_backward_y = true
   end
-  Move_X(math.abs(delta_X), is_backward_x)
-  Move_Y(math.abs(delta_Y), is_backward_y)
+  grid_module.Move_X(math.abs(delta_X), is_backward_x)
+  grid_module.Move_Y(math.abs(delta_Y), is_backward_y)
 end
 
 function grid_module.Goto_Centre()
   -- Centre is (11,6) no matter the origin
   -- 4 blocks per grid
-  Goto(11, 6)
+  grid_module.Goto(11, 6)
 end
 
 function grid_module.Setup_grid()
@@ -198,24 +198,24 @@ function grid_module.Setup_grid()
 end
 
 function grid_module.Load_vault(X, Y)
-  Goto(X, Y)
-  Vault_insertion_or_extraction()
-  Goto_Centre()
-  Vault_insertion_or_extraction()
+  grid_module.Goto(X, Y)
+  grid_module.Vault_insertion_or_extraction()
+  grid_module.Goto_Centre()
+  grid_module.Vault_insertion_or_extraction()
 end
 
 function grid_module.Move_vault(from_X, from_Y, to_X, to_Y)
-  Goto(from_X, from_Y)
-  Vault_insertion_or_extraction()
-  Goto(to_X, to_Y)
-  Vault_insertion_or_extraction()
+  grid_module.Goto(from_X, from_Y)
+  grid_module.Vault_insertion_or_extraction()
+  grid_module.Goto(to_X, to_Y)
+  grid_module.Vault_insertion_or_extraction()
 end
 
 function grid_module.Unload_vault(X, Y)
-  Goto_Centre()
-  Vault_insertion_or_extraction()
-  Goto(X, Y)
-  Vault_insertion_or_extraction()
+  grid_module.Goto_Centre()
+  grid_module.Vault_insertion_or_extraction()
+  grid_module.Goto(X, Y)
+  grid_module.Vault_insertion_or_extraction()
 end
 
 function grid_module.Get_time_to_move(blocks)
@@ -261,7 +261,8 @@ end
 
 function grid_module.Reload_state()
 
-  local file = fs.open("storage_state.dat", "r")local grid = false
+  local file = fs.open("storage_state.dat", "r")
+  local grid = false
   local pos = false
   if file == nil then
     Monitor.clear()
