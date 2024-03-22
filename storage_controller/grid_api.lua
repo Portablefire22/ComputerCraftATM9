@@ -246,3 +246,16 @@ function Save_grid_state()
   file.close()
 end
 
+function Init_redstone()
+  Redstone_integrator.setOutput("up", false)
+  Redstone_integrator.setOutput("down", false)
+  Redstone_integrator.setOutput("north", false)
+  Redstone_integrator.setOutput("south", false)
+  Redstone_integrator.setOutput("east", false)
+  Redstone_integrator.setOutput("west", false)
+end
+
+function Init()
+  Init_redstone()
+  Determine_state()
+end

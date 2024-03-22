@@ -100,12 +100,7 @@ function Runtime()
 end
 
 function Start()
-  Redstone_integrator.setOutput("up", false)
-  Redstone_integrator.setOutput("down", false)
-  Redstone_integrator.setOutput("north", false)
-  Redstone_integrator.setOutput("south", false)
-  Redstone_integrator.setOutput("east", false)
-  Redstone_integrator.setOutput("west", false)
+  grid_api.Init_redstone()
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   Monitor.setTextColour(colours.white)
