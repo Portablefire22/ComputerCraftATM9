@@ -82,6 +82,7 @@ end
 
 function M.Execute()
   M.frame_buffer[#M.frame_buffer+1] = M.input_buffer
+  M.frame_buffer[#M.frame_buffer+1] = ""
 end
 
 function M.display_buffer()
