@@ -45,8 +45,6 @@ function Determine_state() -- Figure out what state the storage system was left 
     Monitor.write("Assuming system is completely empty!")
     Monitor.setCursorPos(1,3)
     Monitor.write("Blank grid created!")
-    grid = true
-  end
   local position_file = fs.open("gantry_state.dat", "r")
   if position_file == nil then
     if grid then 

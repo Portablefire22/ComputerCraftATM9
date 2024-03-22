@@ -1,9 +1,11 @@
 local grid_module = {}
 
-Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
-Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
-Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
-Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
+local Monitor = peripheral.find("monitor")
+
+local Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
+local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
+local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
+local Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
 
 Grabbed_vault = nil
 Grid = {}
@@ -262,15 +264,49 @@ function grid_module.Reload_state()
   local file = fs.open("storage_state.dat", "r")local grid = false
   local pos = false
   if file == nil then
-    Setup_grid()
-    Save_grid_state()
+    Monitor.clear()
+    Monitor.setTextColour(colours.red)
+    Monitor.setCursorPos(1,1)
+    Monitor.write("Previous storage state was not saved!")
+    Monitor.setCursorPos(1,2)
+    Monitor.write("Assuming system is completely empty!")
+    Monitor.setCursorPos(1,3)
+    Monitor.write("Blank grid created!")
+    grid_module.Setup_grid()
+    grid_module.Save_grid_state()
+  end
+ 
+  local position_file = fs.open("gantry_state.dat", "r")
+  if position_file == nil then
+    if grid then 
+      Monitor.clear()
+      Monitor.setCursorPos(1,1)
+    else 
+      Monitor.setCursorPos(1,4)
+    end
+    Monitor.write("Position not found, defaulting to (1,1)")
+    grid_module.Home_gantry()
+    pos = true
+    grid_module.Save_gantry_state()
   end
 
+  if not grid then
+    grid_module.Grid = textutils.unserialize(file.readAll())
+  end
+  if not pos then
+    local position = textutils.unserialize(position_file.readAll())
+    print(position)
+    grid_module.POS_X = position["X"]
+    grid_module.POS_Y = position["Y"]
+  end
+  if not grid or not pos then 
+    os.sleep(2.5) -- Allow the user to read it?
+  end
 end
 
 function grid_module.Init()
-  Init_redstone()
-  Determine_state()
+  grid_module.Init_redstone()
+  grid_module.Reload_state()
 end
 
 return grid_module
