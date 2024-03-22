@@ -1,4 +1,5 @@
 local grid_api = require("grid_api")
+local cli = require("cli")
 
 Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
@@ -46,13 +47,12 @@ function Cmd()
 end
 
 function Runtime()
-  grid_api.Load_vault(1,1)
-  Display_grid()
-  os.sleep(2)
-  grid_api.Unload_vault(15, 3)
-  grid_api.Display_grid()
-  grid_api.Move_vault(15, 3, 1, 1)
-  Display_grid()
+  while true do
+    local event, param1, param2, param3 = os.pullEvent()
+    if event == "key" then
+      cli.process_input(param1)
+    end
+  end
 end
 
 function Start()

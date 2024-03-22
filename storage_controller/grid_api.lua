@@ -31,7 +31,7 @@ function M.Extend_piston()
   M.Set_Horz_Movement(true)
   M.Stop(false)
   for i=1,3 do 
-    Increment_position()
+    M.Increment_position()
     os.sleep(0.2)
   end
 end
@@ -163,6 +163,7 @@ function M.Vault_insertion_or_extraction()
     M.Grid[M.POS_Y][M.POS_X] = {0}
     M.Vault = nil
   end
+  M.Save_grid_state()
   M.Retract_piston()
 end
 
@@ -260,7 +261,6 @@ function M.Init_redstone()
 end
 
 function M.Reload_state()
-
   local file = fs.open("storage_state.dat", "r")
   local grid = false
   local pos = false
