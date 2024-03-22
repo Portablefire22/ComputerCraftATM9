@@ -1,6 +1,7 @@
 local M = {}
 
 M.input_buffer = ""
+M.frame_buffer = {}
 M.shift = false
 M.caps = false
 
@@ -56,10 +57,49 @@ function M.process_input(raw_key)
     end
     M.input_buffer = M.input_buffer .. key
   end
-  print(tryWrite(M.input_buffer, " > ", colour.orange))
+  local temp = "The Grid > " .. M.input_buffer
+  local i = 0
+  local frame_temp = temp
+  local w,h = term.getSize()
+  local x = w
+  while string.len(frame_temp) > 0 do
+    x = temp.find(frame_temp, "\n")
+    if x ~= nil then
+      M.frame_buffer[#M.frame_buffer+1] = frame_temp:sub(1, x)
+      frame_temp = frame_temp:sub(x, string.len(frame_temp))
+    end
+    
+    if string.len(frame_temp) > w then
+      M.frame_buffer[#M.frame_buffer+1] = frame_temp:sub(1, w)
+      frame_temp = frame_temp:sub(w, string.len(frame_temp))
+    else
+      M.frame_buffer[#M.frame_buffer+1] = frame_temp
+      frame_temp = ""
+    end
+  end
+  M.frame_buffer[#M.frame_buffer+1] = temp
+
+end
+
+function M.display_buffer()
+  local w, h = term.getSize()
+  local lines = #M.frame_buffer
+  local start = #M.frame_buffer - h
+  local line_pos = 1
+  for line = start, #M.frame_buffer do
+    term.setCursorPos(1,line_pos)
+    line_pos = line_pos + 1
+    local temp = M.frame_buffer[line]
+    while string.len(temp) > 0 do
+      temp = tryWrite(temp, "[>]", colours.orange) or tryWrite(temp, "[^>]")
+    end
+  end
 end
 
 local function tryWrite( sLine, regex, colour )
+  if #M.frame_buffer == 0 then
+    return
+  end
   local match = string.match( sLine, regex )
   if match then
         if type(colour) == "number" then
@@ -68,7 +108,7 @@ local function tryWrite( sLine, regex, colour )
           term.setTextColour( colour(match) )
         end
         term.write( match )
-        term.setTextColour( textColour )
+        term.setTextColour( colours.white )
         return string.sub( sLine, string.len(match) + 1 )
   end
   return nil
