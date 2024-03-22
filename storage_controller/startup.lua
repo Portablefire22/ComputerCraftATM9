@@ -45,10 +45,10 @@ function Determine_state() -- Figure out what state the storage system was left 
     Monitor.write("Previous storage state was not saved!")
     Monitor.setCursorPos(1,2)
     Monitor.write("Assuming system is completely empty!")
-    Setup_grid()
+    grid_api.Setup_grid()
     Monitor.setCursorPos(1,3)
     Monitor.write("Blank grid created!")
-    Save_grid_state()
+    grid_api.Save_grid_state()
     grid = true
   end
   local position_file = fs.open("gantry_state.dat", "r")
@@ -60,9 +60,9 @@ function Determine_state() -- Figure out what state the storage system was left 
       Monitor.setCursorPos(1,4)
     end
     Monitor.write("Position not found, defaulting to (1,1)")
-    Home_gantry()
+    grid_api.Home_gantry()
     pos = true
-    Save_gantry_state()
+    grid_api.Save_gantry_state()
   end
 
   if not grid then
