@@ -82,7 +82,7 @@ end
 
 function M.Execute()
   M.frame_buffer[#M.frame_buffer+1] = M.input_buffer
-  M.frame_buffer[#M.frame_buffer+1] = ""
+  M.frame_buffer[#M.frame_buffer+1] = "The Grid> "
 end
 
 function M.display_buffer()
