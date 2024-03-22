@@ -55,26 +55,32 @@ function M.process_input(raw_key)
     end
     M.input_buffer = M.input_buffer .. key
   end
-  local temp = "The Grid > " .. M.input_buffer
+  local temp = "The Grid> " .. M.input_buffer
   local i = 0
   local frame_temp = temp
   local w,h = term.getSize()
   local x = w
+  if #M.frame_buffer == 0 then 
+    M.frame_buffer[1] = temp
+  end
   while string.len(frame_temp) > 0 do
     x = temp.find(frame_temp, "\n")
     if x ~= nil then
-      M.frame_buffer[#M.frame_buffer+1] = frame_temp:sub(1, x)
-      frame_temp = frame_temp:sub(x, string.len(frame_temp))
+      M.Execute()
     end
     
-    if string.len(frame_temp) > w then
+    if string.len(frame_temp) >= w then
       M.frame_buffer[#M.frame_buffer+1] = frame_temp:sub(1, w)
-      frame_temp = frame_temp:sub(w, string.len(frame_temp))
+      frame_temp = string.sub(frame_temp, w, string.len(frame_temp))
     else
-      M.frame_buffer[#M.frame_buffer+1] = frame_temp
+      M.frame_buffer[#M.frame_buffer] = frame_temp
       frame_temp = ""
     end
   end
+end
+
+function M.Execute()
+  M.frame_buffer[#M.frame_buffer+1] = M.input_buffer
 end
 
 function M.display_buffer()
@@ -82,8 +88,11 @@ function M.display_buffer()
   local w, h = term.getSize()
   local lines = #M.frame_buffer
   local start = #M.frame_buffer - h
+  if start < 1 then 
+    start = 1
+  end
   local line_pos = 1
-  for line = start, #M.frame_buffer+1 do
+  for line = start, #M.frame_buffer do
     term.setCursorPos(1,line_pos)
     line_pos = line_pos + 1
     local temp = M.frame_buffer[line]
@@ -92,7 +101,7 @@ function M.display_buffer()
     end
     print(temp)
     while string.len(temp) > 0 do
-      temp = M.tryWrite(temp, "[>]", colours.orange) or M.tryWrite(temp, "^[^>]", colours.white)
+      temp = M.tryWrite(temp, "^[>]", colours.orange) or M.tryWrite(temp, "^[^>]", colours.white)
     end
       ::continue::
   end
