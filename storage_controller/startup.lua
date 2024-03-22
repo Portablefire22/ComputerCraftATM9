@@ -50,8 +50,9 @@ function Runtime()
   while true do
     local event, param1, param2, param3 = os.pullEvent()
     if event == "key" then
-      print(param1)
       cli.process_input(param1)
+    elseif event == "key_up" then
+      cli.process_key_toggles(param1)
     end
   end
 end
