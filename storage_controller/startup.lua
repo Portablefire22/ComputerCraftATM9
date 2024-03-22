@@ -91,7 +91,7 @@ end
 
 function Runtime()
   grid_api.Load_vault(1,1)
-  grid_api.Display_grid()
+  Display_grid()
   os.sleep(2)
   grid_api.Unload_vault(15, 3)
   grid_api.Display_grid()
