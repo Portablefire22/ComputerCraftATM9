@@ -66,13 +66,13 @@ function Determine_state() -- Figure out what state the storage system was left 
   end
 
   if not grid then
-    Grid = textutils.unserialize(file.readAll())
+    grid_api.Grid = textutils.unserialize(file.readAll())
   end
   if not pos then
     local position = textutils.unserialize(position_file.readAll())
     print(position)
-    POS_X = position["X"]
-    POS_Y = position["Y"]
+    grid_api.POS_X = position["X"]
+    grid_api.POS_Y = position["Y"]
   end
   if not grid or not pos then 
     os.sleep(2.5) -- Allow the user to read it?
@@ -100,7 +100,7 @@ function Runtime()
 end
 
 function Start()
-  grid_api.Init_redstone()
+  grid_api.Init()
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   Monitor.setTextColour(colours.white)
