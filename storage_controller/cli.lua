@@ -59,14 +59,15 @@ function M.process_input(raw_key)
   local i = 0
   local frame_temp = temp
   local w,h = term.getSize()
-  local x = w
   if #M.frame_buffer == 0 then 
     M.frame_buffer[1] = temp
   end
   while string.len(frame_temp) > 0 do
-    x = temp.find(frame_temp, "\n")
+    local x = temp.find(frame_temp, "\n")
     if x ~= nil then
       M.Execute()
+      M.input_buffer = ""
+      break
     end
     
     if string.len(frame_temp) >= w then
@@ -86,9 +87,8 @@ end
 function M.display_buffer()
   term.clear()
   local w, h = term.getSize()
-  local lines = #M.frame_buffer
   local start = #M.frame_buffer - h
-  if start < 1 then 
+  if start < 1 then
     start = 1
   end
   local line_pos = 1
@@ -96,10 +96,12 @@ function M.display_buffer()
     term.setCursorPos(1,line_pos)
     line_pos = line_pos + 1
     local temp = M.frame_buffer[line]
+    if #M.frame_buffer == 0 then 
+      temp = "The Grid> "
+    end
     if temp == nil then 
       goto continue
     end
-    print(temp)
     while string.len(temp) > 0 do
       temp = M.tryWrite(temp, "^[>]", colours.orange) or M.tryWrite(temp, "^[^>]", colours.white)
     end
