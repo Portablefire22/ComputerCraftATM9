@@ -1,9 +1,11 @@
+local grid_api = require("grid_api")
+
 Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
 Monitor = peripheral.find("monitor")
 
-os.loadAPI("grid_api.lua")
+
 Item_map = {}
 
 function Display_grid()
@@ -35,20 +37,14 @@ end
 
 
 function Determine_state() -- Figure out what state the storage system was left in
-  local file = fs.open("storage_state.dat", "r")
-  local grid = false
-  local pos = false
-  if file == nil then
-    Monitor.clear()
+      Monitor.clear()
     Monitor.setTextColour(colours.red)
     Monitor.setCursorPos(1,1)
     Monitor.write("Previous storage state was not saved!")
     Monitor.setCursorPos(1,2)
     Monitor.write("Assuming system is completely empty!")
-    grid_api.Setup_grid()
     Monitor.setCursorPos(1,3)
     Monitor.write("Blank grid created!")
-    grid_api.Save_grid_state()
     grid = true
   end
   local position_file = fs.open("gantry_state.dat", "r")

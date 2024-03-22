@@ -1,3 +1,5 @@
+local grid_module = {}
+
 Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
@@ -12,13 +14,13 @@ WIDTH = 21
 HEIGHT = 11
 
 
-function Toggle_grabber()
+function grid_module.Toggle_grabber()
   Redstone_integrator.setOutput("east", true)
   os.sleep(0.2)
   Redstone_integrator.setOutput("east", false)
 end
 
-function Extend_piston()
+function grid_module.Extend_piston()
   --Chat_box.sendMessage("Extending")
   Stop(true)
   os.sleep(0.2)
@@ -32,7 +34,7 @@ function Extend_piston()
   end
 end
 
-function Retract_piston()
+function grid_module.Retract_piston()
   Stop(true)
   --Chat_box.sendMessage("Retracting")
   os.sleep(0.2)
@@ -46,30 +48,30 @@ function Retract_piston()
   end
 end
 
-function Set_Horz_Movement(state)
+function grid_module.Set_Horz_Movement(state)
   Redstone_integrator.setOutput("south", state) -- Stops if true
 end
 
-function Set_Vert_Movement(state)
+function grid_module.Set_Vert_Movement(state)
   Redstone_integrator.setOutput("north", state)
 end
 
-function Set_Reverse(state)
+function grid_module.Set_Reverse(state)
   Redstone_integrator.setOutput("west", state)
 end
 
-function Stop(state)
+function grid_module.Stop(state)
   Redstone_integrator.setOutput("up", state)
 end
 
-function Increment_position()
+function grid_module.Increment_position()
   Redstone_integrator_2.setOutput("up", true)
   os.sleep(0.2)
   Redstone_integrator_2.setOutput("up", false)
   os.sleep(0.6)
 end
 
-function Home_gantry()
+function grid_module.Home_gantry()
   -- I ain't got anything to figure out if it is home
   -- So I'll just send it home and wait 10s between each input
 
@@ -107,7 +109,7 @@ function Home_gantry()
   POS_Y = 1
 end
 
-function Move_X(blocks, is_backward)
+function grid_module.Move_X(blocks, is_backward)
   Stop(true)
   Set_Vert_Movement(false)
   Set_Horz_Movement(true)
@@ -127,7 +129,7 @@ function Move_X(blocks, is_backward)
   Set_Reverse(false)
 end
 
-function Move_Y(blocks, is_backward)
+function grid_module.Move_Y(blocks, is_backward)
   Stop(true)
   Set_Vert_Movement(true)
   Set_Horz_Movement(false)
@@ -147,7 +149,7 @@ function Move_Y(blocks, is_backward)
   Set_Reverse(false)
 end
 
-function Vault_insertion_or_extraction()
+function grid_module.Vault_insertion_or_extraction()
   Extend_piston()
   Toggle_grabber()
   if Vault == nil then 
@@ -162,7 +164,7 @@ function Vault_insertion_or_extraction()
   Retract_piston()
 end
 
-function Goto(X, Y)
+function grid_module.Goto(X, Y)
   --Chat_box.sendMessage(string.format("Moving to (%d,%d)", X, Y))
   local delta_X = X - POS_X
   local delta_Y = Y - POS_Y
@@ -178,13 +180,13 @@ function Goto(X, Y)
   Move_Y(math.abs(delta_Y), is_backward_y)
 end
 
-function Goto_Centre()
+function grid_module.Goto_Centre()
   -- Centre is (11,6) no matter the origin
   -- 4 blocks per grid
   Goto(11, 6)
 end
 
-function Setup_grid()
+function grid_module.Setup_grid()
   for y=1,HEIGHT do
     Grid[y] = {}
     for x=1,WIDTH do
@@ -193,28 +195,28 @@ function Setup_grid()
   end
 end
 
-function Load_vault(X, Y)
+function grid_module.Load_vault(X, Y)
   Goto(X, Y)
   Vault_insertion_or_extraction()
   Goto_Centre()
   Vault_insertion_or_extraction()
 end
 
-function Move_vault(from_X, from_Y, to_X, to_Y)
+function grid_module.Move_vault(from_X, from_Y, to_X, to_Y)
   Goto(from_X, from_Y)
   Vault_insertion_or_extraction()
   Goto(to_X, to_Y)
   Vault_insertion_or_extraction()
 end
 
-function Unload_vault(X, Y)
+function grid_module.Unload_vault(X, Y)
   Goto_Centre()
   Vault_insertion_or_extraction()
   Goto(X, Y)
   Vault_insertion_or_extraction()
 end
 
-function Get_time_to_move(blocks)
+function grid_module.Get_time_to_move(blocks)
   -- https://github.com/EvGamer/minecraft_cc_scripts/blob/master/create_gantry_test/move.lua
   local rpm = 256
   local tick_in_second = 20
@@ -223,15 +225,15 @@ function Get_time_to_move(blocks)
   return (math.abs(blocks) * speed_to_rpm / (rpm * tick_in_second)) + 0.2
 end
 
-function Attach_vault()
+function grid_module.Attach_vault()
   Vault = peripheral.find("create:item_vault")
 end
 
-function Detach_vault()
+function grid_module.Detach_vault()
   Vault = nil
 end
 
-function Save_gantry_state()
+function grid_module.Save_gantry_state()
   local file = fs.open("gantry_state.dat", "w")
   local pos = {}
   pos["X"] = POS_X
@@ -240,13 +242,13 @@ function Save_gantry_state()
   file.close()
 end
 
-function Save_grid_state()
+function grid_module.Save_grid_state()
   local file = fs.open("storage_state.dat", "w")
   file.write(textutils.serialize(Grid))
   file.close()
 end
 
-function Init_redstone()
+function grid_module.Init_redstone()
   Redstone_integrator.setOutput("up", false)
   Redstone_integrator.setOutput("down", false)
   Redstone_integrator.setOutput("north", false)
@@ -255,7 +257,20 @@ function Init_redstone()
   Redstone_integrator.setOutput("west", false)
 end
 
-function Init()
+function grid_module.Reload_state()
+
+  local file = fs.open("storage_state.dat", "r")local grid = false
+  local pos = false
+  if file == nil then
+    Setup_grid()
+    Save_grid_state()
+  end
+
+end
+
+function grid_module.Init()
   Init_redstone()
   Determine_state()
 end
+
+return grid_module
