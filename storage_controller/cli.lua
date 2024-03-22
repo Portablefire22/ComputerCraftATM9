@@ -13,8 +13,6 @@ function M.process_key_toggles(raw_key)
 end
 
 function M.process_input(raw_key)
-  term.clear()
-  term.setCursorPos(1,1)
   local key = keys.getName(raw_key)
   if key == "space" then
     key = " "
@@ -77,39 +75,47 @@ function M.process_input(raw_key)
       frame_temp = ""
     end
   end
-  M.frame_buffer[#M.frame_buffer+1] = temp
-
 end
 
 function M.display_buffer()
+  term.clear()
   local w, h = term.getSize()
   local lines = #M.frame_buffer
   local start = #M.frame_buffer - h
   local line_pos = 1
-  for line = start, #M.frame_buffer do
+  for line = start, #M.frame_buffer+1 do
     term.setCursorPos(1,line_pos)
     line_pos = line_pos + 1
     local temp = M.frame_buffer[line]
-    while string.len(temp) > 0 do
-      temp = tryWrite(temp, "[>]", colours.orange) or tryWrite(temp, "[^>]")
+    if temp == nil then 
+      goto continue
     end
+    while string.len(temp) > 0 do
+      temp = M.tryWrite(temp, "[>]", colours.orange) or M.tryWrite(temp, "[^>]", colours.white)
+    end
+      ::continue::
   end
 end
 
-local function tryWrite( sLine, regex, colour )
+function M.tryWrite( sLine, regex, colour )
   if #M.frame_buffer == 0 then
     return
   end
   local match = string.match( sLine, regex )
   if match then
-        if type(colour) == "number" then
-          term.setTextColour( colour )
-        else
-          term.setTextColour( colour(match) )
-        end
-        term.write( match )
-        term.setTextColour( colours.white )
-        return string.sub( sLine, string.len(match) + 1 )
+    if type(colour) == "number" then
+      term.setTextColour( colour )
+    else
+      term.setTextColour( colour(match) )
+    end
+    if string.sub(sLine, 1,1) == match then
+      term.write( match )
+      term.setTextColour( colours.white )
+    else 
+      term.setTextColour( colours.white )
+      term.write(string.sub(sLine, 1, string.find(sLine, regex)))
+    end
+      return string.sub( sLine, string.len(match) + 1 )
   end
   return nil
 end

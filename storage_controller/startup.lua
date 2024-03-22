@@ -48,6 +48,7 @@ end
 
 function Runtime()
   while true do
+    cli.display_buffer()
     local event, param1, param2, param3 = os.pullEvent()
     if event == "key" then
       cli.process_input(param1)
