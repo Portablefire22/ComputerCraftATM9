@@ -275,32 +275,30 @@ function M.Reload_state()
     Monitor.write("Blank grid created!")
     M.Setup_grid()
     M.Save_grid_state()
+    grid = true
+  else
+    M.Grid = textutils.unserialize(file.readAll())
   end
  
   local position_file = fs.open("gantry_state.dat", "r")
   if position_file == nil then
-    if grid then 
+    if grid then
       Monitor.clear()
       Monitor.setCursorPos(1,1)
-    else 
+    else
       Monitor.setCursorPos(1,4)
     end
     Monitor.write("Position not found, defaulting to (1,1)")
     M.Home_gantry()
     pos = true
     M.Save_gantry_state()
-  end
-
-  if not grid then
-    M.Grid = textutils.unserialize(file.readAll())
-  end
-  if not pos then
+  else
     local position = textutils.unserialize(position_file.readAll())
     print(position)
     M.POS_X = position["X"]
     M.POS_Y = position["Y"]
   end
-  if not grid or not pos then 
+  if not grid or not pos then
     os.sleep(2.5) -- Allow the user to read it?
   end
 end
