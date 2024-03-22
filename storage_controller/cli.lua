@@ -111,11 +111,12 @@ function M.tryWrite( sLine, regex, colour )
     if string.sub(sLine, 1,1) == match then
       term.write( match )
       term.setTextColour( colours.white )
+      return string.sub( sLine, string.len(match) + 1 )
     else 
       term.setTextColour( colours.white )
-      term.write(string.sub(sLine, 1, string.find(sLine, regex)))
+      term.write(string.sub(sLine, 1, string.find(sLine, regex) - 1))
+      return string.sub( sLine, string.find(sLine, regex))
     end
-      return string.sub( sLine, string.len(match) + 1 )
   end
   return nil
 end
