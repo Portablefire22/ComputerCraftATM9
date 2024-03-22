@@ -35,44 +35,6 @@ function Display_grid()
   end
 end
 
-
-function Determine_state() -- Figure out what state the storage system was left in
-      Monitor.clear()
-    Monitor.setTextColour(colours.red)
-    Monitor.setCursorPos(1,1)
-    Monitor.write("Previous storage state was not saved!")
-    Monitor.setCursorPos(1,2)
-    Monitor.write("Assuming system is completely empty!")
-    Monitor.setCursorPos(1,3)
-    Monitor.write("Blank grid created!")
-  local position_file = fs.open("gantry_state.dat", "r")
-  if position_file == nil then
-    if grid then 
-      Monitor.clear()
-      Monitor.setCursorPos(1,1)
-    else 
-      Monitor.setCursorPos(1,4)
-    end
-    Monitor.write("Position not found, defaulting to (1,1)")
-    grid_api.Home_gantry()
-    pos = true
-    grid_api.Save_gantry_state()
-  end
-
-  if not grid then
-    grid_api.Grid = textutils.unserialize(file.readAll())
-  end
-  if not pos then
-    local position = textutils.unserialize(position_file.readAll())
-    print(position)
-    grid_api.POS_X = position["X"]
-    grid_api.POS_Y = position["Y"]
-  end
-  if not grid or not pos then 
-    os.sleep(2.5) -- Allow the user to read it?
-  end
-end
-
 function Save_items()
   local file = fs.open("stored_items.map", "w")
   file.write(textutils.serialize(Item_map))
@@ -99,7 +61,6 @@ function Start()
   Monitor.setCursorPos(1,1)
   Monitor.setTextColour(colours.white)
   Monitor.write("Initialising Storage...")
-  Determine_state()
   Display_grid()
   Runtime()
   --Load_vault(1,1)
