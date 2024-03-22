@@ -90,8 +90,9 @@ function M.display_buffer()
     if temp == nil then 
       goto continue
     end
+    print(temp)
     while string.len(temp) > 0 do
-      temp = M.tryWrite(temp, "[>]", colours.orange) or M.tryWrite(temp, "[^>]", colours.white)
+      temp = M.tryWrite(temp, "[>]", colours.orange) or M.tryWrite(temp, "^[^>]", colours.white)
     end
       ::continue::
   end
@@ -108,15 +109,9 @@ function M.tryWrite( sLine, regex, colour )
     else
       term.setTextColour( colour(match) )
     end
-    if string.sub(sLine, 1,1) == match then
-      term.write( match )
-      term.setTextColour( colours.white )
-      return string.sub( sLine, string.len(match) + 1 )
-    else 
-      term.setTextColour( colours.white )
-      term.write(string.sub(sLine, 1, string.find(sLine, regex) - 1))
-      return string.sub( sLine, string.find(sLine, regex))
-    end
+    term.write(match)
+    term.setTextColour(colours.white)
+    return string.sub( sLine, string.len(match) + 1 )
   end
   return nil
 end
