@@ -20,8 +20,9 @@ M.GRID_CENTRE_Y = 6
 
 function M.Read_vault_contents()
   M.Attach_vault()
-  M.Vault["ITEMS"] = M.Vault_per.list()
+  M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_Y]["ITEMS"] = M.Vault_per.list()
   M.Detach_vault()
+  M.Save_grid_state()
 end
 
 function M.Toggle_grabber()
