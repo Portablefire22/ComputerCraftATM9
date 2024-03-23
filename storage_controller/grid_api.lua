@@ -187,10 +187,16 @@ function M.Goto(X, Y)
 end
 
 function M.Add_vault(x, y)
-  if M.Does_vault_exist(x, y) then 
+  if M.Does_vault_exist(x, y) then
     return false
   end
-  M.Grid[y][x]["ITEMS"] = {}
+  if M.Grid[y] == nil then
+    M.Grid[y] = {}
+  end
+  if M.Grid[y][x] == nill then
+    M.Grid[y][x] = {}
+  end
+  M.Grid[y][x]["ITEMS"] = {1}
 end
 
 function M.Goto_Centre()
@@ -211,9 +217,10 @@ end
 function M.Does_vault_exist(X, Y)
   if M.Grid[Y] ~= nil then
     if M.Grid[Y][X] ~= nil then
-      return true
+      if next(M.Grid[y][x]) ~= nil then
+        return true
+      end
     end
-    return false
   end
   return false
 end

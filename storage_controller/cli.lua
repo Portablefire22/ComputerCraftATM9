@@ -21,7 +21,7 @@ function Command_move(start_x, start_y, end_x, end_y)
 end
 
 function Command_add(x, y)
-  if x > grid.WIDTH or x < grid.WIDTH then 
+  if tonumber(x) > grid.WIDTH or tonumber(x) < 0 then
     M.write_line("Out of bounds")
     M.write_line(string.format("Width: 0 to %d", grid.WIDTH))
     M.write_line(string.format("Height: 0 to %d", grid.HEIGHT))
@@ -31,7 +31,11 @@ function Command_add(x, y)
     M.write_line(string.format("Vault (%d, %d) already exists!", x, y))
     return
   end
-  grid.Add_vault(x, y)
+  if grid.Add_vault(x, y) then 
+    M.write_line(string.format("Vault (%d, %d) not added!", x, y))
+  else
+    M.write_line("Vault added")
+  end
 end
 
 function Command_load(x, y)
@@ -48,7 +52,7 @@ end
 
 function M.Execute()
   local cmd = {}
-  for arg in string.gmatch(M.input_buffer, "%S+") do 
+  for arg in string.gmatch(M.input_buffer, "%S+") do
     table.insert(cmd, string.upper(arg))
   end
   if cmd[1] == "MOVE" then
