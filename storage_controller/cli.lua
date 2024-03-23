@@ -1,6 +1,7 @@
 local M = {}
 
 local grid = require("grid_api")
+local monitor = require("monitor_controller")
 
 M.input_buffer = ""
 M.frame_buffer = {}
@@ -22,6 +23,15 @@ function Command_move(start_x, start_y, end_x, end_y)
     return
   end
   grid.Move_vault(start_x, start_y, end_x, end_y)
+end
+
+function Command_toggle_display()
+  monitor.isGrid = !monitor.isGrid
+  if monitor.isGrid then
+    M.write_line("Displaying Grid")
+  else
+    M.write_line("Displaying items")
+  end
 end
 
 function Command_add(x, y)
@@ -93,6 +103,8 @@ function M.Execute()
     else
       Command_load(cmd[2], cmd[3])
     end
+  elseif cmd[1] == "TOGGLE_DISPLAY" then 
+    Command_toggle_display()
   else
     M.write_line(string.format("Command '%s' not found!", cmd[1]))
   end
