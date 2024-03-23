@@ -20,6 +20,20 @@ function Command_move(start_x, start_y, end_x, end_y)
   grid.Move_vault(start_x, start_y, end_x, end_y)
 end
 
+function Command_add(x, y)
+  if x > grid.WIDTH or x < grid.WIDTH then 
+    M.write_line("Out of bounds")
+    M.write_line(string.format("Width: 0 to %d", grid.WIDTH))
+    M.write_line(string.format("Height: 0 to %d", grid.HEIGHT))
+    return
+  end
+  if grid.Does_vault_exist(x, y) then
+    M.write_line(string.format("Vault (%d, %d) already exists!", x, y))
+    return
+  end
+  grid.Add_vault(x, y)
+end
+
 function Command_load(x, y)
   M.write_line(string.format("Loading vault (%d,%d)", x, y))
   if not grid.Does_vault_exist(x, y) then

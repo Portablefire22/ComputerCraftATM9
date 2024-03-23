@@ -186,6 +186,13 @@ function M.Goto(X, Y)
   M.Move_Y(math.abs(delta_Y), is_backward_y)
 end
 
+function M.Add_vault(x, y)
+  if M.Does_vault_exist(x, y) then 
+    return false
+  end
+  M.Grid[y][x]["ITEMS"] = {}
+end
+
 function M.Goto_Centre()
   -- Centre is (11,6) no matter the origin
   -- 4 blocks per grid
