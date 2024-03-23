@@ -1,4 +1,5 @@
 local M = {}
+local display = require("monitor_controller")
 
 local Monitor = peripheral.find("monitor")
 
@@ -14,6 +15,8 @@ M.POS_X = 1
 M.POS_Y = 1
 M.WIDTH = 21
 M.HEIGHT = 11
+M.GRID_CENTRE_X = 11
+M.GRID_CENTRE_Y = 6
 
 
 function M.Toggle_grabber()
@@ -196,6 +199,10 @@ function M.Setup_grid()
         M.Grid[y][x] = {}
     end
   end
+end
+
+function M.Does_vault_exist(X, Y)
+  return M.Grid[Y][X] ~= nil
 end
 
 function M.Load_vault(X, Y)

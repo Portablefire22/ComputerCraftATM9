@@ -55,6 +55,7 @@ function Runtime()
     elseif event == "key_up" then
       cli.process_key_toggles(param1)
     end
+    Display_grid()
   end
 end
 

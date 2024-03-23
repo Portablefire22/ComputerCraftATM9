@@ -10,13 +10,32 @@ M.caps = false
 
 function Command_move(start_x, start_y, end_x, end_y)
   M.write_line(string.format("Moving (%d, %d) to (%d, %d)", start_x, start_y, end_x, end_y))
+  if not grid.Does_vault_exist(start_x, start_y) then
+    M.write_line(string.format("Vault (%d,%d) does not exist!"))
+    return
+  elseif grid.Does_vault_exist(end_x, end_y) then
+    M.write_line("Destination already has a vault!")
+    return
+  end
   grid.Move_vault(start_x, start_y, end_x, end_y)
+end
+
+function Command_load(x, y)
+  M.write_line(string.format("Loading vault (%d,%d)", x, y))
+  if not grid.Does_vault_exist(x, y) then
+    M.write_line(string.format("Vault (%d,%d) does not exist!"))
+    return
+  elseif grid.Does_vault_exist(M.GRID_CENTRE_X,M.GRID_CENTRE_Y) then
+    M.write_line("ERROR: A vault is already loaded!")
+    return
+  end
+  grid.Load_vault(x, y)
 end
 
 function M.Execute()
   local cmd = {}
   for arg in string.gmatch(M.input_buffer, "%S+") do 
-    table.insert(string.upper(cmd), arg)
+    table.insert(cmd, string.upper(arg))
   end
   if cmd[1] == "MOVE" then
     if #cmd < 5 then 
@@ -110,6 +129,7 @@ end
 
 function M.write_line(msg)
   M.frame_buffer[#M.frame_buffer+1] = msg
+  M.display_buffer()
 end
 
 function M.display_buffer()
