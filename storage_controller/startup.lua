@@ -14,10 +14,6 @@ function Save_items()
   file.close()
 end
 
-function Cmd()
-  local input = read()
-end
-
 function Runtime()
   while true do
     cli.display_buffer()
