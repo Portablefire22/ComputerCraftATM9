@@ -202,7 +202,13 @@ function M.Setup_grid()
 end
 
 function M.Does_vault_exist(X, Y)
-  return M.Grid[Y][X] ~= nil
+  if M.Grid[Y] ~= nil then
+    if M.Grid[Y][X] ~= nil then
+      return true
+    end
+    return false
+  end
+  return false
 end
 
 function M.Load_vault(X, Y)
