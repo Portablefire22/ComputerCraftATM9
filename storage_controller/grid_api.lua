@@ -18,6 +18,11 @@ M.HEIGHT = 11
 M.GRID_CENTRE_X = 11
 M.GRID_CENTRE_Y = 6
 
+function M.Read_vault_contents()
+  M.Attach_vault()
+  M.Vault["ITEMS"] = M.Vault_per.list()
+  M.Detach_vault()
+end
 
 function M.Toggle_grabber()
   Redstone_integrator.setOutput("east", true)
@@ -161,9 +166,10 @@ function M.Vault_insertion_or_extraction()
     M.Vault = {}
     M.Vault["X"] = M.POS_X
     M.Vault["Y"] = M.POS_Y
+    M.Vault["ITEMS"] = M.Grid[M.POS_Y][M.POS_X]["ITEMS"]
     M.Grid[M.POS_Y][M.POS_X] = {}
   else
-    M.Grid[M.POS_Y][M.POS_X] = {0}
+    M.Grid[M.POS_Y][M.POS_X]["ITEMS"] = M.Vault["ITEMS"]
     M.Vault = nil
   end
   M.Save_grid_state()
@@ -231,6 +237,7 @@ function M.Load_vault(X, Y)
   M.Vault_insertion_or_extraction()
   M.Goto_Centre()
   M.Vault_insertion_or_extraction()
+  M.Read_vault_contents()
 end
 
 function M.Move_vault(from_X, from_Y, to_X, to_Y)
@@ -257,11 +264,11 @@ function M.Get_time_to_move(blocks)
 end
 
 function M.Attach_vault()
-  M.Vault = peripheral.find("create:item_vault")
+  M.Vault_per = peripheral.find("create:item_vault")
 end
 
 function M.Detach_vault()
-  M.Vault = nil
+  M.Vault_per = nil
 end
 
 function M.Save_gantry_state()
