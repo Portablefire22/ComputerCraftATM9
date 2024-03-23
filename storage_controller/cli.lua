@@ -1,9 +1,26 @@
 local M = {}
 
+local grid = require("grid_api")
+
 M.input_buffer = ""
 M.frame_buffer = {}
 M.shift = false
 M.caps = false
+
+
+function Command_move(start_x, start_y, end_x, end_y)
+  M.write_line(string.format("Moving (%d, %d) to (%d, %d)", start_x, start_y, end_x, end_y))
+  grid.Move_vault(start_x, start_y, end_x, end_y)
+end
+
+function M.Execute()
+  local cmd = {}
+  for k, v in string.gmatch(M.input_buffer, " ") do 
+    M.write_line(k)
+  end
+  M.frame_buffer[#M.frame_buffer+1] = "The Grid> "
+end
+
 
 function M.process_key_toggles(raw_key)
   local key = keys.getName(raw_key)
@@ -80,9 +97,8 @@ function M.process_input(raw_key)
   end
 end
 
-function M.Execute()
-  M.frame_buffer[#M.frame_buffer+1] = M.input_buffer
-  M.frame_buffer[#M.frame_buffer+1] = "The Grid> "
+function M.write_line(msg)
+  M.frame_buffer[#M.frame_buffer+1] = msg
 end
 
 function M.display_buffer()
