@@ -15,8 +15,19 @@ end
 
 function M.Execute()
   local cmd = {}
-  for k, v in string.gmatch(M.input_buffer, " ") do 
-    M.write_line(k)
+  for arg in string.gmatch(M.input_buffer, "%S+") do 
+    table.insert(string.upper(cmd), arg)
+  end
+  if cmd[1] == "MOVE" then
+    if #cmd < 5 then 
+      M.write_line("Not enough args!")
+      M.write_line("CMD: move start_x start_y end_x end_y")
+    elseif #cmd > 5 then 
+      M.write_line("Unknown arguments!")
+      M.write_line("CMD: move start_x start_y end_x end_y")
+    else 
+    Command_move(cmd[2], cmd[3], cmd[4], cmd[5])
+    end
   end
   M.frame_buffer[#M.frame_buffer+1] = "The Grid> "
 end
