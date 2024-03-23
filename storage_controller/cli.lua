@@ -61,6 +61,28 @@ function M.Execute()
     else 
     Command_move(cmd[2], cmd[3], cmd[4], cmd[5])
     end
+  elseif cmd[1] == "ADD" then 
+    if #cmd < 3 then
+      M.write_line("Not enough args!")
+      M.write_line("CMD: add x y")
+    elseif #cmd > 3 then
+      M.write_line("Unknown arguments!")
+      M.write_line("CMD: add x y")
+    else
+      Command_add(cmd[2], cmd[3])
+    end
+  elseif cmd[1] == "LOAD" then 
+    if #cmd < 3 then
+      M.write_line("Not enough args!")
+      M.write_line("CMD: load x y")
+    elseif #cmd > 3 then
+      M.write_line("Unknown arguments!")
+      M.write_line("CMD: load x y")
+    else
+      Command_load(cmd[2], cmd[3])
+    end
+  else
+    M.write_line(string.format("Command '%s' not found!", cmd[1]))
   end
   M.frame_buffer[#M.frame_buffer+1] = "The Grid> "
 end
