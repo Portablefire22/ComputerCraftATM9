@@ -11,7 +11,7 @@ M.caps = false
 function Command_move(start_x, start_y, end_x, end_y)
   M.write_line(string.format("Moving (%d, %d) to (%d, %d)", start_x, start_y, end_x, end_y))
   if not grid.Does_vault_exist(start_x, start_y) then
-    M.write_line(string.format("Vault (%d,%d) does not exist!"))
+    M.write_line(string.format("Vault (%d,%d) does not exist!", start_x, start_y))
     return
   elseif grid.Does_vault_exist(end_x, end_y) then
     M.write_line("Destination already has a vault!")
@@ -23,7 +23,7 @@ end
 function Command_load(x, y)
   M.write_line(string.format("Loading vault (%d,%d)", x, y))
   if not grid.Does_vault_exist(x, y) then
-    M.write_line(string.format("Vault (%d,%d) does not exist!"))
+    M.write_line(string.format("Vault (%d,%d) does not exist!", x, y))
     return
   elseif grid.Does_vault_exist(M.GRID_CENTRE_X,M.GRID_CENTRE_Y) then
     M.write_line("ERROR: A vault is already loaded!")
