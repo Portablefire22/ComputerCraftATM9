@@ -193,10 +193,11 @@ function M.Add_vault(x, y)
   if M.Grid[y] == nil then
     M.Grid[y] = {}
   end
-  if M.Grid[y][x] == nill then
+  if M.Grid[y][x] == nil then
     M.Grid[y][x] = {}
   end
   M.Grid[y][x]["ITEMS"] = {1}
+  M.Save_grid_state()
 end
 
 function M.Goto_Centre()
@@ -217,7 +218,7 @@ end
 function M.Does_vault_exist(X, Y)
   if M.Grid[Y] ~= nil then
     if M.Grid[Y][X] ~= nil then
-      if next(M.Grid[y][x]) ~= nil then
+      if next(M.Grid[Y][X]) ~= nil then
         return true
       end
     end

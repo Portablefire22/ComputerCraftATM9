@@ -9,6 +9,10 @@ M.caps = false
 
 
 function Command_move(start_x, start_y, end_x, end_y)
+  start_x = tonumber(start_x)
+  start_y = tonumber(start_y)
+  end_x = tonumber(end_x)
+  end_y = tonumber(end_y)
   M.write_line(string.format("Moving (%d, %d) to (%d, %d)", start_x, start_y, end_x, end_y))
   if not grid.Does_vault_exist(start_x, start_y) then
     M.write_line(string.format("Vault (%d,%d) does not exist!", start_x, start_y))
@@ -21,6 +25,8 @@ function Command_move(start_x, start_y, end_x, end_y)
 end
 
 function Command_add(x, y)
+  x = tonumber(x)
+  y = tonumber(y)
   if tonumber(x) > grid.WIDTH or tonumber(x) < 0 then
     M.write_line("Out of bounds")
     M.write_line(string.format("Width: 0 to %d", grid.WIDTH))
@@ -31,7 +37,7 @@ function Command_add(x, y)
     M.write_line(string.format("Vault (%d, %d) already exists!", x, y))
     return
   end
-  if grid.Add_vault(x, y) then 
+  if grid.Add_vault(x, y) then
     M.write_line(string.format("Vault (%d, %d) not added!", x, y))
   else
     M.write_line("Vault added")
@@ -39,6 +45,8 @@ function Command_add(x, y)
 end
 
 function Command_load(x, y)
+  x = tonumber(x)
+  y = tonumber(y)
   M.write_line(string.format("Loading vault (%d,%d)", x, y))
   if not grid.Does_vault_exist(x, y) then
     M.write_line(string.format("Vault (%d,%d) does not exist!", x, y))
