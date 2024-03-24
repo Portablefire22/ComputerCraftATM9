@@ -18,13 +18,20 @@ M.GRID_CENTRE_Y = 6
 
 M.Item_map = {}
 
+function M.Get_item(item, count)
+
+end
+
 function M.Add_loaded_vault_to_item_map()
   -- Takes all items from the currently loaded vault and adds the vault to the correct branches
   -- of the item map
   local vault_items = {}
-  for slot, item in pairs(chest.list()) do
+  for slot, item in pairs(M.Vault_per.list()) do
     if item == nil or slot == nil then
       goto continue
+    end
+    if vault_items[item.name] == nil then
+      vault_items[item.name] = {}
     end
     local tmp = {}
     tmp[slot] = item.count
@@ -32,8 +39,12 @@ function M.Add_loaded_vault_to_item_map()
     ::continue::
   end
 
-  for item_name, slot_info in pairs(vault_items) do 
+  for item_name, slot_info in pairs(vault_items) do
+    if M.Item_map[item_name] == nil then
+      M.Item_map[item_name] = {}
+    end
     M.Item_map[item_name][M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"]] = slot_info
+    table.sort(M.Item_map[item_name], function(a, b) return a[M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"]] < b[M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"]] end)
   end
   M.Save_item_state()
 end
@@ -51,7 +62,7 @@ end
 
 function M.Read_vault_contents()
   M.Attach_vault()
-  M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_Y]["ITEMS"] = M.Vault_per.list()
+  M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ITEMS"] = M.Vault_per.list()
   M.Add_loaded_vault_to_item_map()
   M.Detach_vault()
   M.Save_grid_state()

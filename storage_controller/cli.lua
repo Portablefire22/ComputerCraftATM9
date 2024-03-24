@@ -8,6 +8,13 @@ M.frame_buffer = {}
 M.shift = false
 M.caps = false
 
+function Command_get(item, amount)
+  amount = tonumber(amount)
+  item = item:gsub(" ", "_")
+  item = item:sub(item:find(":") + 1)
+  M.write_line(("Getting %s x%d"):format(item, amount))
+  grid.Get_item(item, amount)
+end
 
 function Command_move(start_x, start_y, end_x, end_y)
   start_x = tonumber(start_x)
@@ -105,6 +112,8 @@ function M.Execute()
     end
   elseif cmd[1] == "TOGGLE_DISPLAY" then 
     Command_toggle_display()
+  elseif cmd[1] == "GET" then
+    Command_get(cmd[2], cmd[3])
   else
     M.write_line(string.format("Command '%s' not found!", cmd[1]))
   end
