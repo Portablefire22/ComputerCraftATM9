@@ -11,7 +11,9 @@ M.caps = false
 function Command_get(item, amount)
   amount = tonumber(amount)
   item = item:gsub(" ", "_")
-  item = item:sub(item:find(":") + 1)
+  if item:find(":") ~= nil then
+    item = item:sub(item:find(":") + 1)
+  end
   M.write_line(("Getting %s x%d"):format(item, amount))
   grid.Get_item(item, amount)
 end
@@ -154,6 +156,8 @@ function M.process_input(raw_key)
     key = "8"
   elseif key == "nine" then
     key = "9"
+  elseif key == "minus" and M.shift then
+    key = "_"
   elseif key == "rightShift" or key == "leftShift" then 
     M.shift = true
     key = ""
