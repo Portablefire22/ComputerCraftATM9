@@ -1,5 +1,4 @@
 local M = {}
-local display = require("monitor_controller")
 
 local Monitor = peripheral.find("monitor")
 
@@ -8,7 +7,6 @@ local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
 local Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
 
-M.Grabbed_vault = nil
 M.Grid = {}
 M.Vault = nil
 M.POS_X = 1
@@ -18,9 +16,43 @@ M.HEIGHT = 11
 M.GRID_CENTRE_X = 11
 M.GRID_CENTRE_Y = 6
 
+M.Item_map = {}
+
+function M.Add_loaded_vault_to_item_map()
+  -- Takes all items from the currently loaded vault and adds the vault to the correct branches
+  -- of the item map
+  local vault_items = {}
+  for slot, item in pairs(chest.list()) do
+    if item == nil or slot == nil then
+      goto continue
+    end
+    local tmp = {}
+    tmp[slot] = item.count
+    table.insert(vault_items[item.name], tmp)
+    ::continue::
+  end
+
+  for item_name, slot_info in pairs(vault_items) do 
+    M.Item_map[item_name][M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"]] = slot_info
+  end
+  M.Save_item_state()
+end
+
+local random = math.random
+math.randomseed(os.time())
+function M.uuid()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
+
+
 function M.Read_vault_contents()
   M.Attach_vault()
   M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_Y]["ITEMS"] = M.Vault_per.list()
+  M.Add_loaded_vault_to_item_map()
   M.Detach_vault()
   M.Save_grid_state()
 end
@@ -168,9 +200,11 @@ function M.Vault_insertion_or_extraction()
     M.Vault["X"] = M.POS_X
     M.Vault["Y"] = M.POS_Y
     M.Vault["ITEMS"] = M.Grid[M.POS_Y][M.POS_X]["ITEMS"]
+    M.Vault["ID"] = M.Grid[M.POS_Y][M.POS_X]["ID"]
     M.Grid[M.POS_Y][M.POS_X] = {}
   else
     M.Grid[M.POS_Y][M.POS_X]["ITEMS"] = M.Vault["ITEMS"]
+    M.Grid[M.POS_Y][M.POS_X]["ID"] = M.Vault["ID"]
     M.Vault = nil
   end
   M.Save_grid_state()
@@ -203,6 +237,7 @@ function M.Add_vault(x, y)
   if M.Grid[y][x] == nil then
     M.Grid[y][x] = {}
   end
+  M.Grid[y][x]["ID"] = M.uuid()
   M.Grid[y][x]["ITEMS"] = {1}
   M.Save_grid_state()
 end
@@ -284,6 +319,12 @@ end
 function M.Save_grid_state()
   local file = fs.open("storage_state.dat", "w")
   file.write(textutils.serialize(M.Grid))
+  file.close()
+end
+
+function M.Save_item_state()
+  local file = fs.open("item_state.dat", "w")
+  file.write(textutils.serialize(M.Item_map))
   file.close()
 end
 

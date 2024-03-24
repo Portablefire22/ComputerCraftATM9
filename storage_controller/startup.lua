@@ -5,7 +5,6 @@ local monitor_api = require("monitor_controller")
 Chat_box = peripheral.find("chatBox")
 Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
-Item_map = {}
 
 
 function Save_items()
@@ -23,14 +22,14 @@ function Runtime()
     elseif event == "key_up" then
       cli.process_key_toggles(param1)
     end
-    monitor_api.Display_grid()
+    monitor_api.Display()
   end
 end
 
 function Start()
   grid_api.Init()
   monitor_api.Init()
-  monitor_api.Display_grid()
+  monitor_api.Display()
   Runtime()
   --Load_vault(1,1)
   --os.sleep(2)

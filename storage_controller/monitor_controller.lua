@@ -33,6 +33,7 @@ function M.Display_grid()
 end
 
 function M.Display_items()
+  Monitor.clear()
   Monitor.setCursorPos(1,1)
   Monitor.setTextColour(colours.pink)
   Monitor.write("Displaying items not implemented!")

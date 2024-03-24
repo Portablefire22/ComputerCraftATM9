@@ -26,7 +26,7 @@ function Command_move(start_x, start_y, end_x, end_y)
 end
 
 function Command_toggle_display()
-  monitor.isGrid = !monitor.isGrid
+  monitor.isGrid = not monitor.isGrid
   if monitor.isGrid then
     M.write_line("Displaying Grid")
   else
