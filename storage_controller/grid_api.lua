@@ -24,9 +24,16 @@ function M.Get_item(item, count)
   if M.Item_map[item] == nil then
     return false
   end
-  for i, v in ipairs(M.Item_map[item]) do
-    Monitor.write(("%s | %s"):format(i, v))
+  local p = 1
+  for i, v in pairs(M.Item_map[item]) do
+    Monitor.setCursorPos(1, p)
+    Monitor.write(("%s"):format(i))
+    for j, x in pairs (v) do
+      Monitor.write(("%s | %s"):format(j, x))
+    end
+    p = p + 1
   end
+  return true
 end
 
 function M.Add_loaded_vault_to_item_map()
