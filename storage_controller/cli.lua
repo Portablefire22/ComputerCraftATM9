@@ -15,7 +15,9 @@ function Command_get(item, amount)
     item = item:sub(item:find(":") + 1)
   end
   M.write_line(("Getting %s x%d"):format(item, amount))
-  grid.Get_item(item, amount)
+  if grid.Get_item(item, amount) then
+    M.write_line(("Failed getting %s x%d"):format(item, amount))
+  end
 end
 
 function Command_move(start_x, start_y, end_x, end_y)
@@ -158,6 +160,8 @@ function M.process_input(raw_key)
     key = "9"
   elseif key == "minus" and M.shift then
     key = "_"
+  elseif key == "semicolon" and M.shift then
+    key = ":"
   elseif key == "rightShift" or key == "leftShift" then 
     M.shift = true
     key = ""

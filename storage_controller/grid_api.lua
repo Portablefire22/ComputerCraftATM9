@@ -22,8 +22,8 @@ function M.Get_item(item, count)
   if next(M.Item_map[item]) == nil then
     return false
   end
-  for i, v in ipairs(M.Item_map[item]) do 
-
+  for i, v in ipairs(M.Item_map[item]) do
+    Monitor.write(("%s | %s"):format(i, v))
   end
 end
 
@@ -45,6 +45,9 @@ function M.Add_loaded_vault_to_item_map()
   end
 
   for item_name, slot_info in pairs(vault_items) do
+  if item_name:find(":") ~= nil then
+    item_name = item_name:sub(item_name:find(":") + 1)
+  end
     if M.Item_map[item_name] == nil then
       M.Item_map[item_name] = {}
     end
