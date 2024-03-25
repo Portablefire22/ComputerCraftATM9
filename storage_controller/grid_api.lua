@@ -19,7 +19,12 @@ M.GRID_CENTRE_Y = 6
 M.Item_map = {}
 
 function M.Get_item(item, count)
+  if next(M.Item_map[item]) == nil then
+    return false
+  end
+  for i, v in ipairs(M.Item_map[item]) do 
 
+  end
 end
 
 function M.Add_loaded_vault_to_item_map()
