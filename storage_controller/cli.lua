@@ -10,7 +10,7 @@ M.caps = false
 
 function Command_get(item, amount)
   amount = tonumber(amount)
-  item = item:gsub(" ", "_")
+  item = item:gsub(" ", "_"):lower()
   if item:find(":") ~= nil then
     item = item:sub(item:find(":") + 1)
   end

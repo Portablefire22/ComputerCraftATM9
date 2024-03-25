@@ -1,7 +1,6 @@
 local M = {}
 
 local Monitor = peripheral.find("monitor")
-
 local Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
@@ -19,7 +18,7 @@ M.GRID_CENTRE_Y = 6
 M.Item_map = {}
 
 function M.Get_item(item, count)
-  if next(M.Item_map[item]) == nil then
+  if M.Item_map[item] == nil or next(M.Item_map[item]) == nil then
     return false
   end
   for i, v in ipairs(M.Item_map[item]) do
@@ -360,6 +359,7 @@ function M.Reload_state()
   local file = fs.open("storage_state.dat", "r")
   local grid = false
   local pos = false
+  local itm = false
   if file == nil then
     Monitor.clear()
     Monitor.setTextColour(colours.red)
@@ -378,7 +378,7 @@ function M.Reload_state()
  
   local position_file = fs.open("gantry_state.dat", "r")
   if position_file == nil then
-    if grid then
+    if not grid then
       Monitor.clear()
       Monitor.setCursorPos(1,1)
     else
@@ -394,7 +394,19 @@ function M.Reload_state()
     M.POS_X = position["X"]
     M.POS_Y = position["Y"]
   end
-  if not grid or not pos then
+
+  local item_file = fs.open("item_state.dat", "r")
+  if item_file == nil then
+    Monitor.setCursorPos(1,5)
+    Monitor.write("Item state not found, defaulting to new")
+    M.Item_map = {}
+    M.Save_item_state()
+    itm = true
+  else
+    M.Item_map = textutils.unserialize(item_file.readAll())
+  end
+
+  if not grid or not pos or not itm then
     os.sleep(2.5) -- Allow the user to read it?
   end
 end
