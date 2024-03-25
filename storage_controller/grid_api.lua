@@ -1,5 +1,5 @@
 local M = {}
-
+local pretty = require "cc.pretty"
 local Monitor = peripheral.find("monitor")
 local Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
@@ -18,7 +18,10 @@ M.GRID_CENTRE_Y = 6
 M.Item_map = {}
 
 function M.Get_item(item, count)
-  if M.Item_map[item] == nil or next(M.Item_map[item]) == nil then
+  Monitor.clear()
+  Monitor.setCursorPos(1,1)
+  Monitor.write(pretty.render(pretty.pretty(M.Item_map)))
+  if M.Item_map[item] == nil then
     return false
   end
   for i, v in ipairs(M.Item_map[item]) do
