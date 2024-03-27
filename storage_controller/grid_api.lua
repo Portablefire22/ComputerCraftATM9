@@ -19,9 +19,29 @@ M.GRID_CENTRE_Y = 6
 
 M.Item_map = {}
 
+function M.Add_items()
+  for slot, item in pairs(Input_barrel.list()) do
+    M.Get_vault_with_most_item(item)
+  end
+end
+
+function M.Get_vault_with_most_item(item)
+  local current_most = nil
+  Monitor.clear()
+  local p = 1
+  for i, id in pairs(M.Item_map[item]) do
+    Monitor.setCursorPos(1,p)
+    Monitor.write(pretty.render(pretty.pretty(id)))
+    p = p + 1
+  end
+  os.sleep(5)
+end
+
 function M.Pull_item(slot, count)
   Buffer_barrel.pullItems(peripheral.getName(M.Vault_per), tonumber(slot), tonumber(count))
-  Inventory_manager.addItemToPlayer("west")
+  for b_slot, b_item in pairs(Buffer_barrel.list()) do
+    Inventory_manager.addItemToPlayer("west", {name = b_item.name})
+  end
 end
 
 function M.Get_item(item, count)
@@ -53,7 +73,7 @@ function M.Get_item(item, count)
     M.Unload()
     p = p + 1
   end
-  os.sleep(50)
+  return true
 end
 
 function M.UUID_to_pos(uuid)
@@ -390,7 +410,7 @@ end
 function M.Get_first_free_slot()
   for y = 1, M.HEIGHT, 1 do
     for x = 1, M.WIDTH, 1 do
-      if M.Grid[y][x] == nil then
+      if M.Grid[y][x]["ID"] == nil then
         local tmp = {}
         tmp["Y"] = y
         tmp["X"] = x
