@@ -32,6 +32,9 @@ function M.Get_item(item, count)
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   local p = 1
+  if M.Does_vault_exist(11, 6) then
+    M.Unload()
+  end
   for i, j in pairs(slots_to_get) do
     Monitor.setCursorPos(1, p)
     local ps = M.UUID_to_pos(i)
@@ -39,17 +42,19 @@ function M.Get_item(item, count)
       Monitor.write(("Could not find '%s'"):format(i))
       return
     end
+    M.Load_vault(ps["X"], ps["Y"])
     for x, v in pairs(j) do
+      M.Pull_item(x, v)
       Monitor.write(("%s | %s | (%d,%d)"):format(x, v, ps["X"], ps["Y"]))
       p = p + 1
     end
+    M.Unload()
     p = p + 1
   end
   os.sleep(50)
 end
 
 function M.UUID_to_pos(uuid)
-  Monitor.clear()
   for y = 1, M.HEIGHT, 1 do
     for x = 1, M.WIDTH, 1 do
       if M.Grid[y][x]["ID"] == uuid then
