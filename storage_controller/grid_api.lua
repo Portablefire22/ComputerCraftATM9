@@ -26,24 +26,29 @@ function M.Get_item(item, count)
     return false
   end
   for i, v in pairs(M.Item_map[item]) do
-    for j, x in pairs (v) do
-      local tmp = {}
+    local tmp = {}
+    for j, slots in pairs (v) do
       for slot, slot_count in pairs(x) do
+        Monitor.setCursorPos(1, slot)
+        Monitor.write(("%s | %s | %s"):format(slot, slot_count, count_prog))
+        if count_prog == 0 then
+          break
+        end
         if slot_count == count_prog then
-          table.insert(tmp,slot, slot_count)
+          table.insert(tmp, slot, slot_count)
           count_prog = 0
         elseif slot_count > count_prog then
-          table.insert(tmp,slot, count_prog)
+          table.insert(tmp, slot, count_prog)
           count_prog = 0
         elseif slot_count < count_prog then
-          table.insert(tmp,slot, slot_count)
+          table.insert(tmp, slot, slot_count)
           count_prog = count_prog - slot_count
         end
-        if count_prog == 0 then
-          goto got_item
-        end
       end
-      slots_to_get:insert(i, tmp)
+      slots_to_get[i] = tmp
+      if count_prog == 0 then
+        goto got_item
+      end
     end
   end
   ::got_item::
