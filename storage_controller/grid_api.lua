@@ -17,7 +17,22 @@ M.GRID_CENTRE_Y = 6
 
 M.Item_map = {}
 
-function M.Get_item(item, count)
+function M.Get_item(slots_to_get)
+  M.UUID_to_pos(312)
+end
+
+function M.UUID_to_pos(uuid)
+  Monitor.clear()
+  for y = 1, M.HEIGHT, 1 do
+    for x = 1, M.WIDTH, 1 do
+      Monitor.setCursorPos(1, y)
+      Monitor.write(pretty.render(pretty.pretty(M.Grid[y][x])))
+    end
+  end
+  os.sleep(50)
+end
+
+function M.Locate_item(item, count)
   local slots_to_get = {}
   local count_prog = count
   Monitor.clear()
@@ -28,7 +43,7 @@ function M.Get_item(item, count)
   for i, v in pairs(M.Item_map[item]) do
     local tmp = {}
     for j, slots in pairs (v) do
-      for slot, slot_count in pairs(x) do
+      for slot, slot_count in pairs(slots) do
         Monitor.setCursorPos(1, slot)
         Monitor.write(("%s | %s | %s"):format(slot, slot_count, count_prog))
         if count_prog == 0 then
@@ -54,8 +69,8 @@ function M.Get_item(item, count)
   ::got_item::
   Monitor.clear()
   Monitor.setCursorPos(1,1)
-  Monitor.write(("%s"):format(slots_to_get))
-  os.sleep(40)
+  Monitor.write(("%s"):format(pretty.render(pretty.pretty(slots_to_get))))
+  M.Get_item(slots_to_get)
   return true
 end
 
