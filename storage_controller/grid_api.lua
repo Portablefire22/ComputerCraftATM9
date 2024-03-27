@@ -18,18 +18,29 @@ M.GRID_CENTRE_Y = 6
 M.Item_map = {}
 
 function M.Get_item(slots_to_get)
-  M.UUID_to_pos(312)
+  Monitor.clear()
+  Monitor.setCursorPos(1,1)
+  local p = 1
+  for i, j in pairs(slots_to_get) do
+    Monitor.setCursorPos(1, p)
+    Monitor.write(pretty.render(pretty.pretty(slots_to_get)))
+    p = p + 1
+  end
 end
 
 function M.UUID_to_pos(uuid)
   Monitor.clear()
   for y = 1, M.HEIGHT, 1 do
     for x = 1, M.WIDTH, 1 do
-      Monitor.setCursorPos(1, y)
-      Monitor.write(pretty.render(pretty.pretty(M.Grid[y][x])))
+      if M.Grid[y][x]["ID"] == uuid then
+        local tmp = {}
+        tmp["Y"] = y
+        tmp["X"] = x
+        return tmp
+      end
     end
   end
-  os.sleep(50)
+  return nil
 end
 
 function M.Locate_item(item, count)
