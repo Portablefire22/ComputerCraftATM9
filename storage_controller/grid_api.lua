@@ -41,9 +41,9 @@ function M.Add_items()
       end
       M.Load_vault(tmp_pos["X"], tmp_pos["Y"])
     end
+    M.Detach_vault()
     M.Attach_vault()
     Input_barrel.pushItems(peripheral.getName(M.Vault_per), slot)
-    M.Detach_vault()
     end
   if M.Does_vault_exist(11, 6) then
     M.Unload()
@@ -54,12 +54,13 @@ function M.Get_vault_with_most_item(item)
   local current_most = nil
   Monitor.clear()
   local p = 1
-  if M.Item_map[item] == nil then
+  if M.Item_map[item] ~= nil then
     for i, id in pairs(M.Item_map[item]) do
       Monitor.setCursorPos(1,p)
       Monitor.write(pretty.render(pretty.pretty(id)))
       p = p + 1
     end
+    return M.Get_first_vault_with_empty_slot()
   else
     return M.Get_first_vault_with_empty_slot()
   end
@@ -373,8 +374,8 @@ function M.Vault_insertion_or_extraction()
     M.Vault["Y"] = M.POS_Y
     M.Vault["ITEMS"] = M.Grid[M.POS_Y][M.POS_X]["ITEMS"]
     M.Vault["ID"] = M.Grid[M.POS_Y][M.POS_X]["ID"]
-    M.Vault["ITEM_COUNT"] = M.Grid[y][x]["ITEM_COUNT"]
-    M.Vault["SLOTS_FILLED"] = M.Grid[y][x]["SLOTS_FILLED"]
+    M.Vault["ITEM_COUNT"] = M.Grid[M.POS_Y][M.POS_X]["ITEM_COUNT"]
+    M.Vault["SLOTS_FILLED"] = M.Grid[M.POS_Y][M.POS_X]["SLOTS_FILLED"]
     M.Grid[M.POS_Y][M.POS_X] = {}
   else
     M.Grid[M.POS_Y][M.POS_X]["ITEMS"] = M.Vault["ITEMS"]
