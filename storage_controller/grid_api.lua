@@ -29,7 +29,7 @@ function M.Add_items()
       Monitor.clear()
       Monitor.setCursorPos(1,1)
       Monitor.write("Could not find a vault with a free slot!")
-    else if M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"] ~= tmp then
+    elseif M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"] ~= tmp then
       if M.Does_vault_exist(11, 6) then
         M.Unload()
       end
@@ -44,7 +44,7 @@ function M.Add_items()
     M.Attach_vault()
     Input_barrel.pushItems(peripheral.getName(M.Vault_per), slot)
     M.Detach_vault()
-  end
+    end
   if M.Does_vault_exist(11, 6) then
     M.Unload()
   end
@@ -64,7 +64,6 @@ function M.Get_vault_with_most_item(item)
     return M.Get_first_vault_with_empty_slot()
   end
   return nil
-  os.sleep(5)
 end
 
 function M.Get_first_vault_with_empty_slot()
