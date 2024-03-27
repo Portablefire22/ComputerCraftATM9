@@ -23,7 +23,12 @@ function M.Get_item(slots_to_get)
   local p = 1
   for i, j in pairs(slots_to_get) do
     Monitor.setCursorPos(1, p)
-    Monitor.write(pretty.render(pretty.pretty(slots_to_get)))
+    local ps = M.UUID_to_pos(i)
+    if #j == 1 then
+      Monitor.write(("%s | %s | (%d,%d)"):format(i, j[i], ps["X"], ps["Y"]))
+    else
+      Monitor.write(("%s | %s | (%d,%d)"):format(i, pretty.render(pretty.pretty(j)), ps["X"], ps["Y"]))
+    end
     p = p + 1
   end
 end
