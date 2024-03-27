@@ -4,7 +4,7 @@ local Monitor = peripheral.find("monitor")
 local Redstone_integrator = peripheral.wrap("redstoneIntegrator_3")
 local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
-local Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
+local Input_barrel = peripheral.wrap("minecraft:barrel_4") -- Insert items into the vault
 
 local Inventory_manager = peripheral.find("inventoryManager")
 
@@ -44,7 +44,10 @@ function M.Add_items()
     M.Detach_vault()
     M.Attach_vault()
     M.Vault_per.pullItems(peripheral.getName(Input_barrel), slot)
+    M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ITEMS"] = M.Vault_per.list()
+    M.Add_loaded_vault_to_item_map()
     end
+  M.Save_grid_state()
   if M.Does_vault_exist(11, 6) then
     M.Unload()
   end
@@ -103,7 +106,9 @@ function M.Get_item(item, count)
       Monitor.write(("Could not find '%s'"):format(i))
       return
     end
-    M.Load_vault(ps["X"], ps["Y"])
+    if i ~= M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"] then
+      M.Load_vault(ps["X"], ps["Y"])
+    end
     M.Attach_vault()
     for x, v in pairs(j) do
       M.Pull_item(x, v)
@@ -111,9 +116,9 @@ function M.Get_item(item, count)
       p = p + 1
     end
     M.Detach_vault()
-    M.Unload()
     p = p + 1
   end
+  M.Unload()
   return true
 end
 
