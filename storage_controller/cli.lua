@@ -20,6 +20,14 @@ function Command_get(item, amount)
   end
 end
 
+function Command_insert()
+  if grid.Add_items() then
+    M.write_line("Successfully added items to the grid!")
+  else
+    M.write_line("Failed adding items to the grid!")
+  end
+end
+
 function Command_move(start_x, start_y, end_x, end_y)
   start_x = tonumber(start_x)
   start_y = tonumber(start_y)
@@ -125,8 +133,10 @@ function M.Execute()
     end
   elseif cmd[1] == "TOGGLE_DISPLAY" then 
     Command_toggle_display()
-  elseif cmd[1] == "UNLOAD" then 
+  elseif cmd[1] == "UNLOAD" then
     Command_unload()
+  elseif cmd[1] == "INSERT" then
+    Command_insert()
   elseif cmd[1] == "GET" then
     Command_get(cmd[2], cmd[3])
   else
