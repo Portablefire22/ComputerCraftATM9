@@ -15,7 +15,7 @@ function Command_get(item, amount)
     item = item:sub(item:find(":") + 1)
   end
   M.write_line(("Getting %s x%d"):format(item, amount))
-  if not grid.Locate_item(item, amount) then
+  if not grid.Get_item(item, amount) then
     M.write_line(("Failed getting %s x%d"):format(item, amount))
   end
 end
@@ -223,7 +223,7 @@ end
 function M.display_buffer()
   term.clear()
   local w, h = term.getSize()
-  local start = #M.frame_buffer - h
+  local start = #M.frame_buffer - (h - 1)
   if start < 1 then
     start = 1
   end

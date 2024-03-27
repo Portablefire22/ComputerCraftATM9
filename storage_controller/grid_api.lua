@@ -6,6 +6,8 @@ local Redstone_integrator_2 = peripheral.wrap("redstoneIntegrator_4")
 local Buffer_barrel = peripheral.wrap("minecraft:barrel_3") -- To move items to and from the vault
 local Input_barrel = peripheral.wrap("bottom") -- Insert items into the vault
 
+local Inventory_manager = peripheral.find("inventoryManager")
+
 M.Grid = {}
 M.Vault = nil
 M.POS_X = 1
@@ -17,7 +19,16 @@ M.GRID_CENTRE_Y = 6
 
 M.Item_map = {}
 
-function M.Get_item(slots_to_get)
+function M.Pull_item(slot, count)
+  Buffer_barrel.pullItems(peripheral.getName(M.Vault_per), tonumber(slot), tonumber(count))
+  Inventory_manager.addItemToPlayer("west")
+end
+
+function M.Get_item(item, count)
+  local slots_to_get = M.Locate_item(item, count)
+  if slots_to_get == nil then
+    return
+  end
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   local p = 1
@@ -28,13 +39,13 @@ function M.Get_item(slots_to_get)
       Monitor.write(("Could not find '%s'"):format(i))
       return
     end
-    if #j == 1 then
-      Monitor.write(("%s | %s | (%d,%d)"):format(i, j[1], ps["X"], ps["Y"]))
-    else
-      Monitor.write(("%s | %s | (%d,%d)"):format(i, pretty.render(pretty.pretty(j)), ps["X"], ps["Y"]))
+    for x, v in pairs(j) do
+      Monitor.write(("%s | %s | (%d,%d)"):format(x, v, ps["X"], ps["Y"]))
+      p = p + 1
     end
     p = p + 1
   end
+  os.sleep(50)
 end
 
 function M.UUID_to_pos(uuid)
@@ -59,7 +70,7 @@ function M.Locate_item(item, count)
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   if M.Item_map[item] == nil then
-    return false
+    return nil
   end
   for i, v in pairs(M.Item_map[item]) do
     local tmp = {}
@@ -91,8 +102,7 @@ function M.Locate_item(item, count)
   Monitor.clear()
   Monitor.setCursorPos(1,1)
   Monitor.write(("%s"):format(pretty.render(pretty.pretty(slots_to_get))))
-  M.Get_item(slots_to_get)
-  return true
+  return slots_to_get
 end
 
 function M.Add_loaded_vault_to_item_map()
@@ -392,6 +402,7 @@ function M.Unload()
     Monitor.clear()
     Monitor.setCursorPos(1,1)
     Monitor.write("No free space found!")
+    os.sleep(50)
     return
   end
   M.Goto(tmp_pos["X"], tmp_pos["Y"])

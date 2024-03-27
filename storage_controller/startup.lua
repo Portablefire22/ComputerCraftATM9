@@ -3,7 +3,6 @@ local cli = require("cli")
 local monitor_api = require("monitor_controller")
 
 Chat_box = peripheral.find("chatBox")
-Inventory_manager = peripheral.find("inventoryManager")
 Buffer_chest = peripheral.find("sophisticatedstorage:chest") -- Holds items for crafting
 
 
