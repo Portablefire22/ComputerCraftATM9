@@ -18,21 +18,39 @@ M.GRID_CENTRE_Y = 6
 M.Item_map = {}
 
 function M.Get_item(item, count)
+  local slots_to_get = {}
+  local count_prog = count
   Monitor.clear()
   Monitor.setCursorPos(1,1)
-  Monitor.write(pretty.render(pretty.pretty(M.Item_map)))
   if M.Item_map[item] == nil then
     return false
   end
-  local p = 1
   for i, v in pairs(M.Item_map[item]) do
-    Monitor.setCursorPos(1, p)
-    Monitor.write(("%s"):format(i))
     for j, x in pairs (v) do
-      Monitor.write(("%s | %s"):format(j, x))
+      local tmp = {}
+      for slot, slot_count in pairs(x) do
+        if slot_count == count_prog then
+          tmp:insert(slot, slot_count)
+          count_prog = 0
+        elseif slot_count > count_prog then
+          tmp:insert(slot, count_prog)
+          count_prog = 0
+        elseif slot_count < count_prog then
+          tmp:insert(slot, slot_count)
+          count_prog = count_prog - slot_count
+        end
+        if count_prog == 0 then
+          goto got_item
+        end
+      end
+      slots_to_get:insert(i, tmp)
     end
-    p = p + 1
   end
+  ::got_item::
+  Monitor.clear()
+  Monitor.setCursorPos(1,1)
+  Monitor.write(("%s"):format(slots_to_get))
+  os.sleep(40)
   return true
 end
 
