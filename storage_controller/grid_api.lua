@@ -43,7 +43,7 @@ function M.Add_items()
     end
     M.Detach_vault()
     M.Attach_vault()
-    Input_barrel.pushItems(peripheral.getName(M.Vault_per), slot)
+    M.Vault_per.pullItems(peripheral.getName(Input_barrel), slot)
     end
   if M.Does_vault_exist(11, 6) then
     M.Unload()
