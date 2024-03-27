@@ -24,8 +24,12 @@ function M.Get_item(slots_to_get)
   for i, j in pairs(slots_to_get) do
     Monitor.setCursorPos(1, p)
     local ps = M.UUID_to_pos(i)
+    if ps == nil then
+      Monitor.write(("Could not find '%s'"):format(i))
+      return
+    end
     if #j == 1 then
-      Monitor.write(("%s | %s | (%d,%d)"):format(i, j[i], ps["X"], ps["Y"]))
+      Monitor.write(("%s | %s | (%d,%d)"):format(i, j[1], ps["X"], ps["Y"]))
     else
       Monitor.write(("%s | %s | (%d,%d)"):format(i, pretty.render(pretty.pretty(j)), ps["X"], ps["Y"]))
     end
@@ -47,6 +51,7 @@ function M.UUID_to_pos(uuid)
   end
   return nil
 end
+
 
 function M.Locate_item(item, count)
   local slots_to_get = {}
@@ -362,6 +367,34 @@ function M.Move_vault(from_X, from_Y, to_X, to_Y)
   M.Goto(from_X, from_Y)
   M.Vault_insertion_or_extraction()
   M.Goto(to_X, to_Y)
+  M.Vault_insertion_or_extraction()
+end
+
+function M.Get_first_free_slot()
+  for y = 1, M.HEIGHT, 1 do
+    for x = 1, M.WIDTH, 1 do
+      if M.Grid[y][x] == nil then
+        local tmp = {}
+        tmp["Y"] = y
+        tmp["X"] = x
+        return tmp
+      end
+    end
+  end
+  return nil
+end
+
+function M.Unload()
+  M.Goto_Centre()
+  M.Vault_insertion_or_extraction()
+  local tmp_pos = M.Get_first_free_slot()
+  if tmp_pos == nil then
+    Monitor.clear()
+    Monitor.setCursorPos(1,1)
+    Monitor.write("No free space found!")
+    return
+  end
+  M.Goto(tmp_pos["X"], tmp_pos["Y"])
   M.Vault_insertion_or_extraction()
 end
 

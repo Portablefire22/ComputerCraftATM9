@@ -15,7 +15,7 @@ function Command_get(item, amount)
     item = item:sub(item:find(":") + 1)
   end
   M.write_line(("Getting %s x%d"):format(item, amount))
-  if not grid.Get_item(item, amount) then
+  if not grid.Locate_item(item, amount) then
     M.write_line(("Failed getting %s x%d"):format(item, amount))
   end
 end
@@ -79,6 +79,15 @@ function Command_load(x, y)
   grid.Load_vault(x, y)
 end
 
+function Command_unload()
+  M.write_line(string.format("Unloading vault", x, y))
+  if not grid.Does_vault_exist(11, 6) then
+    M.write_line(string.format("Vault (%d,%d) does not exist!", x, y))
+    return
+  end
+  grid.Unload()
+end
+
 function M.Execute()
   local cmd = {}
   for arg in string.gmatch(M.input_buffer, "%S+") do
@@ -116,6 +125,8 @@ function M.Execute()
     end
   elseif cmd[1] == "TOGGLE_DISPLAY" then 
     Command_toggle_display()
+  elseif cmd[1] == "UNLOAD" then 
+    Command_unload()
   elseif cmd[1] == "GET" then
     Command_get(cmd[2], cmd[3])
   else
