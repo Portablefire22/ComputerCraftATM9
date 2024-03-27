@@ -29,6 +29,7 @@ function M.Add_items()
       Monitor.clear()
       Monitor.setCursorPos(1,1)
       Monitor.write("Could not find a vault with a free slot!")
+      return false
     elseif M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"] ~= tmp then
       if M.Does_vault_exist(11, 6) then
         M.Unload()
@@ -51,6 +52,7 @@ function M.Add_items()
   if M.Does_vault_exist(11, 6) then
     M.Unload()
   end
+  return true
 end
 
 function M.Get_vault_with_most_item(item)
@@ -78,6 +80,7 @@ function M.Get_first_vault_with_empty_slot()
       end
     end
   end
+
   return nil
 end
 
