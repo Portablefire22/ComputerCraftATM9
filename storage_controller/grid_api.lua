@@ -43,11 +43,13 @@ function M.Get_item(item, count)
       return
     end
     M.Load_vault(ps["X"], ps["Y"])
+    M.Attach_vault()
     for x, v in pairs(j) do
       M.Pull_item(x, v)
       Monitor.write(("%s | %s | (%d,%d)"):format(x, v, ps["X"], ps["Y"]))
       p = p + 1
     end
+    M.Detach_vault()
     M.Unload()
     p = p + 1
   end
