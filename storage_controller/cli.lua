@@ -87,6 +87,12 @@ function Command_load(x, y)
   grid.Load_vault(x, y)
 end
 
+function Command_load_all()
+  M.write_line("Loading all")
+  grid.Load_all()
+  M.write_line("Loaded all")
+end
+
 function Command_unload()
   M.write_line(string.format("Unloading vault", x, y))
   if not grid.Does_vault_exist(11, 6) then
@@ -121,8 +127,10 @@ function M.Execute()
     else
       Command_add(cmd[2], cmd[3])
     end
-  elseif cmd[1] == "LOAD" then 
-    if #cmd < 3 then
+  elseif cmd[1] == "LOAD" then
+    if #cmd == 2 and cmd[2] == "ALL" then
+      Command_load_all()
+    elseif #cmd < 3 then
       M.write_line("Not enough args!")
       M.write_line("CMD: load x y")
     elseif #cmd > 3 then

@@ -22,6 +22,20 @@ M.GRID_CENTRE_Y = 6
 
 M.Item_map = {}
 
+function M.Load_all()
+  if M.Does_vault_exist(11, 6) then
+    M.Unload()
+  end
+  for y = 1, M.HEIGHT, 1 do
+    for x = 1, M.WIDTH, 1 do
+      if M.Grid[y][x]["ID"] ~= nil then
+        M.Load_vault(x, y)
+        M.Unload_vault(x, y)
+      end
+    end
+  end
+end
+
 function M.Add_items()
   for slot, item in pairs(Input_barrel.list()) do
     local tmp = M.Get_vault_with_most_item(item)
@@ -40,14 +54,13 @@ function M.Add_items()
         Monitor.setCursorPos(1,1)
         Monitor.write(("Could not find '%s'"):format(tmp))
       end
-      M.Load_vault(tmp_pos["X"], tmp_pos["Y"])
+      M.Load_vault(tmp_pos["X"], tmp_pos["Y"])M.Detach_vault()
+      M.Attach_vault()
+      M.Vault_per.pullItems(peripheral.getName(Input_barrel), slot)
+      M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ITEMS"] = M.Vault_per.list()
+      M.Add_loaded_vault_to_item_map()
     end
-    M.Detach_vault()
-    M.Attach_vault()
-    M.Vault_per.pullItems(peripheral.getName(Input_barrel), slot)
-    M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ITEMS"] = M.Vault_per.list()
-    M.Add_loaded_vault_to_item_map()
-    end
+  end
   M.Save_grid_state()
   if M.Does_vault_exist(11, 6) then
     M.Unload()
@@ -73,14 +86,16 @@ function M.Get_vault_with_most_item(item)
 end
 
 function M.Get_first_vault_with_empty_slot()
+  if M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["SLOTS_FILLED"] ~= M.VAULT_SLOTS and M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["SLOTS_FILLED"] ~= nil then
+    return M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"]
+  end
   for y = 1, M.HEIGHT, 1 do
     for x = 1, M.WIDTH, 1 do
-      if M.Grid[y][x]["SLOTS_FILLED"] ~= M.VAULT_SLOTS then
+      if M.Grid[y][x]["SLOTS_FILLED"] ~= M.VAULT_SLOTS and M.Grid[y][x]["SLOTS_FILLED"] ~= nil then
         return M.Grid[y][x]["ID"]
       end
     end
   end
-
   return nil
 end
 
@@ -110,6 +125,7 @@ function M.Get_item(item, count)
       return
     end
     if i ~= M.Grid[M.GRID_CENTRE_Y][M.GRID_CENTRE_X]["ID"] then
+      M.Unload()
       M.Load_vault(ps["X"], ps["Y"])
     end
     M.Attach_vault()
