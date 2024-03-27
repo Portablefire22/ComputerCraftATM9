@@ -30,13 +30,13 @@ function M.Get_item(item, count)
       local tmp = {}
       for slot, slot_count in pairs(x) do
         if slot_count == count_prog then
-          tmp:insert(slot, slot_count)
+          table.insert(tmp,slot, slot_count)
           count_prog = 0
         elseif slot_count > count_prog then
-          tmp:insert(slot, count_prog)
+          table.insert(tmp,slot, count_prog)
           count_prog = 0
         elseif slot_count < count_prog then
-          tmp:insert(slot, slot_count)
+          table.insert(tmp,slot, slot_count)
           count_prog = count_prog - slot_count
         end
         if count_prog == 0 then
