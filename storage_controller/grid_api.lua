@@ -463,7 +463,7 @@ end
 function M.Does_vault_exist(X, Y)
   if M.Grid[Y] ~= nil then
     if M.Grid[Y][X] ~= nil then
-      if next(M.Grid[Y][X]) ~= nil then
+      if M.Grid[Y][X]["ID"] ~= nil then
         return true
       end
     end
